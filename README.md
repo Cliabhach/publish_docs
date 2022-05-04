@@ -1,9 +1,14 @@
-# publish_docs
+# publish_docs (not yet on pub.dev)
 
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
 
 Publish your documentation to GitHub Pages!
+
+_This package is in a pre-release form and not yet ready for general
+use. Feel free to try it out, but understand that the public usage and
+integration steps may change significantly before the first public
+release._
 
 ## Concept
 
