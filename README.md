@@ -1,7 +1,7 @@
 # publish_docs (not yet on pub.dev)
 
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![License: MIT][license_badge]][license_link]
+[![License: BSD-3-Clause][license_badge]][license_link]
 
 Publish your documentation to GitHub Pages!
 
@@ -157,8 +157,8 @@ flutter pub run publish_docs
 
 
 
-[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license_link]: https://opensource.org/licenses/MIT
+[license_badge]: https://img.shields.io/badge/license-BSD_3_Clause-blue.svg
+[license_link]: https://opensource.org/licenses/BSD-3-Clause
 [very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
 [very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
 [dart_dev_dependency]: https://dart.dev/tools/pub/dependencies#dev-dependencies
