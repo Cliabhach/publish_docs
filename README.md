@@ -114,12 +114,51 @@ option had different names.
 
 ## Usage
 
+### Preparation
+
+Your project must work with `dartdoc` before using `publish_docs`.
+
+1. Run `dart analyze`. Fix all errors (warnings _should_ be fixed, but
+the library will still be able to create docs if there are warnings).
+2. Make a `dartdoc_options.yaml` if you don't have one already.
+3. Run `dart doc` to use the version of `dartdoc` that's bundled with
+Dart's SDK.
+
+If `dart doc` finishes successfully, without any errors, then you're
+ready to integrate `publish_docs` into your project. As a special
+case: if there is a version conflict or a version-specific bug in the
+`dart doc` output (such as [Issue 2934][dartdoc_2934]), then you may
+want to skip ahead to the next step anyway.
+
+### Integration
+
+Add `publish_docs` to your project's pubspec.yaml as a
+[dev-dependency][dart_dev_dependency]. Run the appropriate `pub get`
+command for your project (probably `dart pub get` or
+`flutter pub get`) to update your project's pubspec.lock.
+
+...That's basically it. You can now use a `pub run` command to try out
+the tool. We recommend starting off with the `generateDocs` command:
+
+```shell
+# For Dart projects
+dart pub run publish_docs
+# For Flutter projects
+flutter pub run publish_docs
+```
+
+### Customization
+
+
+
 
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [license_link]: https://opensource.org/licenses/MIT
 [very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
 [very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
+[dart_dev_dependency]: https://dart.dev/tools/pub/dependencies#dev-dependencies
 [dartdoc_js_commit]: https://github.com/dart-lang/dartdoc/commit/a33ec963eb5b9aa91
 [dartdoc_library]: https://pub.dev/documentation/dartdoc/5.0.1/dartdoc/dartdoc-library.html
 [dartdoc_pub_meta]: https://pub.dev/documentation/dartdoc/5.0.1/dartdoc/PackageMeta-class.html
+[dartdoc_2934]: https://github.com/dart-lang/dartdoc/issues/2934
 [doxygen_diagrams]: https://www.doxygen.nl/manual/diagrams.html
