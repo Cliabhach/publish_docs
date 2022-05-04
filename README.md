@@ -78,12 +78,12 @@ problem upgrading to newer versions.
 #### Why use `dartdoc`?
 
 We use this library to generate documentation for dart code. While
-there are some limitations (see [TODO: write section]()), `dartdoc` is
-remarkably good at creating readable documentation. It handles all the
-cross-references and annotation information, since it builds a full
-package graph of all the code and comments in your project. This makes
-`dartdoc` a very powerful basis for any kind of visual representation
-of your project.
+there are some limitations (see [Limitations](#limitations)),
+`dartdoc` is remarkably good at creating readable documentation. It
+handles all the cross-references and annotation information, since it
+builds a full package graph of all the code and comments in your
+project. This makes `dartdoc` a very powerful basis for _any_ kind of
+visual representation of your project, not just documentation.
 
 It's easy to imagine `dartdoc` supporting even more features in the
 future, such as graphs [in the style of doxygen][doxygen_diagrams].
@@ -154,7 +154,38 @@ flutter pub run publish_docs
 
 ### Customization
 
+By default, we make use of the following 4 directories:
 
+`doc/api/` - the default output directory for `generateDocs`.
+
+`doc/assets/` - the default directory for runtime resources.
+
+`doc/bin/` - a small marker directory. If this is missing, the
+`updateGitHubDocs` command will refuse to run.
+
+`docs/api/` - the default output directory for `updateGitHubDocs`.
+
+You can change the appearance and behavior of the generated docs by
+adding any of the currently-supported files to `doc/assets/`.
+
+## Limitations
+
+### Our stance on command-line `dartdoc` options
+
+There are things that `dartdoc` can do that are only configured with
+command-line flags. Other options can only be configured through a
+`dartdoc_options.yaml` file. And then there are options that can be
+defined in either way.
+
+Roughly speaking, command-line-only options have the greatest impact.
+They tend to change the output in significant ways, from the obvious
+`--help` and `--format`, to the more subtle `--inject-html` and
+`--validate-links`.
+
+For this reason, we make an effort to avoid using command-line-only
+flags where alternatives exist. The main exception is the
+`--resources-dir` option, which cannot be configured in any other way.
+We provide a value of `doc/assets/` for that.
 
 
 [license_badge]: https://img.shields.io/badge/license-BSD_3_Clause-blue.svg
