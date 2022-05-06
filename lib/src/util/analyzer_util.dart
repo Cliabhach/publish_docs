@@ -2,6 +2,7 @@
 /// Utility file for working with analyzer and some filesystem concepts.
 
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/file_system/file_system.dart';
@@ -13,7 +14,12 @@ import 'package:path/path.dart' as path;
 /// A modified copy of [pubPackageMetaProvider].
 Future<PackageMetaProvider> overlayPackageMetaProvider() async {
 
-  final provider = obtainAssetsOverlayProvider();
+  final provider = obtainAssetsOverlayProvider(
+      pathForLayers: path.absolute('doc', 'assets'),
+      layers: [
+        await _publishDocsResourceLayer()
+      ]
+    );
 
   final sdkDir = PhysicalResourceProvider.INSTANCE
         .getFile(PhysicalResourceProvider.INSTANCE.pathContext
@@ -28,6 +34,21 @@ Future<PackageMetaProvider> overlayPackageMetaProvider() async {
     provider,
     sdkDir,
     messageForMissingPackageMeta: messageForMissingMeta);
+}
+
+/// Method inspired by some of the private 'ResourceLoader' code in `dartdoc`.
+Future<String> _publishDocsResourceLayer() async {
+  final provider = PhysicalResourceProvider.INSTANCE;
+  final resourcesUri = Uri.parse('package:publish_docs/resources');
+  final resolvedUri = await Isolate.resolvePackageUri(resourcesUri);
+
+  if (resolvedUri == null) {
+    throw UnsupportedError('The publish_docs package must be present in your '
+        "pub-cache in order for it to work properly. We can't load default "
+        'resources or assets otherwise.');
+  } else {
+    return provider.getFolder(resolvedUri.toFilePath()).path;
+  }
 }
 
 /// A custom [ResourceProvider] that provides assets with a sort of 'fallback'.
