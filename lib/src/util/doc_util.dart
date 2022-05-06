@@ -24,10 +24,22 @@ final PackageMetaProvider overlayPackageMetaProvider = PackageMetaProvider(
 /// A modified copy of [PubPackageMeta.messageForMissingPackageMeta].
 String messageForMissingMeta(LibraryElement library, DartdocOptionContext context) {
   final libraryString = library.librarySource.fullName;
+  const ourName = 'publish_docs';
   final dartOrFlutter = context.flutterRoot == null ? 'dart' : 'flutter';
-  return 'Unknown package for library: $libraryString.  Consider `$dartOrFlutter pub get` and/or '
-      '`$dartOrFlutter pub global deactivate dartdoc` followed by `$dartOrFlutter pub global activate dartdoc` to fix. '
-      'Also, be sure that `$dartOrFlutter analyze` completes without errors.';
+  return '''
+Unknown package for library: $libraryString.  Consider running
+
+`$dartOrFlutter pub get`
+
+to fix that. If you are using `$ourName` as a global package, try running
+
+`$dartOrFlutter pub global deactivate $ourName`
+and then
+`$dartOrFlutter pub global activate $ourName`
+
+to forcibly rebuild the pub cache.
+
+Also, be sure that `$dartOrFlutter analyze` completes without errors.''';
 }
 
 /// Create a new [Dartdoc] object from the given config.
