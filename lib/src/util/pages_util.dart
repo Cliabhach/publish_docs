@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: BSD-3-Clause
 /// Utility file for working with GitHub Pages.
-
 import 'dart:io';
 
 import 'package:git/git.dart';
 
+import 'customize_util.dart';
 import 'doc_util.dart';
 import 'git_util.dart';
-import 'customize_util.dart';
 
 /// Add a message to the log.
 ///
@@ -39,7 +38,7 @@ Future<String> generateDocsPatch(GitDir gitDir, Directory outputDirectory,
   logStatus('...there, documentation generated!');
   // Task 5: Save our changes into a patch (this creates 2 temp commits)
   final patch = await patchOutOfGitDiff(gitDir, outputDirectory.path,
-      'docs: Regenerate to reflect $versionString');
+      'docs: Regenerate to reflect $versionString',);
   // Task 6: Reset branch back to original state
   if (patch.isEmpty) {
     throw UnsupportedError("Patch wasn't generated correctly. Stopping now.");
@@ -54,7 +53,7 @@ Future<String> generateDocsPatch(GitDir gitDir, Directory outputDirectory,
 /// is empty (as it is by default), we'll just checkout all files.
 Future<ProcessResult> checkoutGitHubBranch(GitDir forGit,
     {List<String> paths = const []}) {
-  final gitHubPages = "gh-pages";
+  const gitHubPages = 'gh-pages';
   final branchRefFuture = forGit.branchReference(gitHubPages);
 
   return forGit.checkoutBranch(gitHubPages, branchRefFuture, paths: paths);

@@ -9,7 +9,7 @@ import 'package:git/git.dart';
 ///
 /// See also [this rev-parse overview](https://git-scm.com/docs/git-rev-parse).
 Future<String> obtainGitVersion(GitDir forGit) async {
-  var args = ['rev-parse', '--short', '--verify', 'HEAD'];
+  final args = ['rev-parse', '--short', '--verify', 'HEAD'];
   return await forGit.runCommand(args).then((process) {
     return process.stdout as String;
   });
@@ -41,9 +41,9 @@ Future<String> patchOutOfGitDiff(GitDir forGit, String path, String message) {
 }
 
 Future<ProcessResult> doFormatPatch(GitDir forGit) async {
-  var commitList = await forGit.commits('HEAD');
-  MapEntry<String, Commit> newDocsCommit = commitList.entries.first;
-  MapEntry<String, Commit> oldDocsCommit = commitList.entries.skip(1).first;
+  final commitList = await forGit.commits();
+  final newDocsCommit = commitList.entries.first;
+  final oldDocsCommit = commitList.entries.skip(1).first;
   // Format the difference between these two commits into a patch
   final sha1 = oldDocsCommit.key;
   final sha2 = newDocsCommit.key;
@@ -102,7 +102,7 @@ extension GitDirExtension on GitDir {
       // We should upstream the 'checkout' method. Maybe.
       if (branchRef == null) {
         throw UnsupportedError(
-            "The $name branch is missing...that's not good.");
+            "The $name branch is missing...that's not good.",);
       } else {
         return checkout(branchRef.branchName, paths: paths);
       }
