@@ -8,6 +8,7 @@ import 'package:analyzer/file_system/file_system.dart';
 import 'package:analyzer/file_system/overlay_file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:dartdoc/dartdoc.dart';
+import 'package:path/path.dart' as path;
 
 /// A modified copy of [pubPackageMetaProvider].
 final PackageMetaProvider overlayPackageMetaProvider = PackageMetaProvider(
@@ -59,8 +60,31 @@ ResourceProvider obtainAssetsOverlayProvider(
   // TODO(Cliabhach): figure out how to future-proof for varying themes
   final base = PhysicalResourceProvider.INSTANCE;
   final overlay = OverlayResourceProvider(base);
+  for (final layer in layers) {
+    base.getFolder(layer).getChildren().forEach(
+        (element) => _registerElement(element, pathForLayers, overlay, layer),
+    );
+  }
 
   return overlay;
+}
+
+void _registerElement(Resource element, String pathForLayers,
+    OverlayResourceProvider overlay, String layer,) {
+  final filename = path.basename(element.path);
+  final pathForCaller = path.absolute(pathForLayers, filename);
+
+  if (overlay.hasOverlay(pathForCaller)) {
+    // Already found in a prior layer; we can go on to the next element.
+  } else if (element is File) {
+    overlay.setOverlay(
+        pathForCaller,
+        content: element.readAsStringSync(),
+        modificationStamp: element.modificationStamp,
+    );
+  } else {
+    print('Ignoring detected Resource "$filename" in $layer.');
+  }
 }
 
 /// A modified copy of [PubPackageMeta.messageForMissingPackageMeta].
