@@ -7,6 +7,7 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
+  analyzer: ^3.4.1
   dartdoc:
     git:
       url: https://github.com/Cliabhach/dartdoc.git
