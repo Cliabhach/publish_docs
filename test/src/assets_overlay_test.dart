@@ -13,10 +13,11 @@ void main() {
     late String testResourcePath;
 
     setUp(() {
-      provider = obtainAssetsOverlayProvider();
       testResourcePath = resourcePath('overlay');
     });
     test('can find basic file', () {
+      provider = obtainAssetsOverlayProvider();
+
       final test1Path = path.absolute(testResourcePath, 'test1');
       final testFolder = provider.getFolder(test1Path);
       // Make sure that our preparation is all right.
@@ -29,6 +30,21 @@ void main() {
       final notHereResource = parentFolder.getChild('not-here.txt');
       expect(childResource.exists, isTrue);
       expect(notHereResource.exists, isFalse);
+    });
+    test('can find overlay file', () {
+      final test2Path = path.absolute(testResourcePath, 'test2');
+
+      final parentPath = path.absolute(test2Path, 'parent');
+
+      // TODO(Cliabhach): Create a provider with built-in directory overlays
+
+      final childResource = relative(provider, parentPath, 'child.txt');
+      final notHereResource = relative(provider, parentPath, 'not-here.txt');
+      final sampleResource = relative(provider, parentPath, 'sampleB');
+
+      expect(childResource.exists, isTrue);
+      expect(notHereResource.exists, isFalse);
+      expect(sampleResource.exists, isTrue);
     });
   });
 }

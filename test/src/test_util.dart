@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, directives_ordering
 import 'dart:io';
 
+import 'package:analyzer/file_system/file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
@@ -43,4 +44,9 @@ String resourcePath(String testName) {
       'for test resources!');
 
   return path.absolute(parent.path, asUri.path);
+}
+
+/// Wrapper around [ResourceProvider.getResource] and [path.absolute].
+Resource relative(ResourceProvider provider, String parent, String child) {
+  return provider.getResource(path.absolute(parent, child));
 }
