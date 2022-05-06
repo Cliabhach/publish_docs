@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_constructors, directives_ordering
+import 'dart:io';
+
 import 'package:analyzer/file_system/file_system.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
@@ -31,6 +33,26 @@ void main() {
 
       // ...now look for 'child.txt' and 'not-here.txt'
       final parentFolder = provider.getFolder(parentPath);
+      final childResource = parentFolder.getChild('child.txt');
+      final notHereResource = parentFolder.getChild('not-here.txt');
+      expect(childResource.exists, isTrue);
+      expect(notHereResource.exists, isFalse);
+    });
+    test('can find basic file via path alias', () {
+      final test1Path = path.absolute(testResourcePath, 'test1');
+      final parentPath = path.absolute(test1Path, 'parent');
+      final fakeParentPath = path.absolute(test1Path, 'not-present-on-disk');
+
+      expect(Directory(fakeParentPath).existsSync(), isFalse);
+
+      provider = obtainAssetsOverlayProvider(
+        pathForLayers: fakeParentPath,
+        layers: [
+          parentPath
+        ],
+      );
+
+      final parentFolder = provider.getFolder(fakeParentPath);
       final childResource = parentFolder.getChild('child.txt');
       final notHereResource = parentFolder.getChild('not-here.txt');
       expect(childResource.exists, isTrue);
