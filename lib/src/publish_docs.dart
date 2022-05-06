@@ -9,7 +9,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dartdoc/dartdoc.dart';
 import 'package:git/git.dart';
 import 'package:path/path.dart' as Path;
 
@@ -29,7 +28,7 @@ class PublishDocs {
 Future<void> generateDocs(List<String> arguments) async {
   // A provider of metadata. Among other things, this can tell us where the
   // Flutter SDK is installed.
-  final metaProvider = pubPackageMetaProvider;
+  final metaProvider = overlayPackageMetaProvider;
 
   // Parse command-line arguments, load config from the dartdoc_options.yaml,
   // and read in some basic pubspec info for the current app.
