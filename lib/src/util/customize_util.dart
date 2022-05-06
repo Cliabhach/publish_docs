@@ -7,8 +7,8 @@ import 'package:dartdoc/dartdoc.dart';
 import 'package:dartdoc/options.dart';
 import 'package:git/git.dart';
 
-import 'doc_util.dart';
-import 'git_util.dart';
+import 'package:publish_docs/src/util/doc_util.dart';
+import 'package:publish_docs/src/util/git_util.dart';
 
 /// Figure out what version of documentation we have here.
 ///
