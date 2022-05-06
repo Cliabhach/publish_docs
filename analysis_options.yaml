@@ -1,1 +1,8 @@
 include: package:very_good_analysis/analysis_options.2.4.0.yaml
+analyzer:
+  errors:
+    # This warning is _way_ too annoying to be worth enabling. It distracts from
+    # code and makes it hard to tell if method arguments have been omitted.
+    #
+    # Disable it everywhere.
+    require_trailing_commas: ignore
