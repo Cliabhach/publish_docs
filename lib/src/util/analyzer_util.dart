@@ -40,9 +40,16 @@ Future<PackageMetaProvider> overlayPackageMetaProvider() async {
 }
 
 /// Method inspired by some of the private 'ResourceLoader' code in `dartdoc`.
+///
+/// Delegates some of the work to [_uriAsPath].
 Future<String> _publishDocsResourceLayer() async {
   final provider = PhysicalResourceProvider.INSTANCE;
-  final resourcesUri = Uri.parse('package:publish_docs/resources');
+  return _uriAsPath('package:publish_docs/resources', provider);
+}
+
+/// Find the [fs.Folder] on disk that represents a given `package:` [uri].
+Future<String> _uriAsPath(String uri, fs.ResourceProvider provider) async {
+  final resourcesUri = Uri.parse(uri);
   final resolvedUri = await Isolate.resolvePackageUri(resourcesUri);
 
   if (resolvedUri == null) {
