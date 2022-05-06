@@ -24,10 +24,38 @@ final PackageMetaProvider overlayPackageMetaProvider = PackageMetaProvider(
 
 /// A custom [ResourceProvider] that provides assets with a sort of 'fallback'.
 ///
-/// If a resource exists at a 'doc/assets/' path in your project, then we
-/// return that. Else, we look in the following places, in order:
-/// 1. the 'lib/resources/' directory of this package
-ResourceProvider obtainAssetsOverlayProvider() {
+/// _This provider will operate relative to the paths you pass in. To make it
+/// easier to describe how it works, we use '$YOUR-PACKAGE' to mean
+/// the full absolute path to the directory where your `pubspec.yaml` is
+/// located._
+///
+/// If [pathForLayers] is left as the default value of an empty string, then
+/// this will act like a normal [PhysicalResourceProvider].
+///
+/// When `dartdoc` looks for resources whose path starts with
+/// '$YOUR-PACKAGE/doc/assets/', we do not want to error out if there's
+/// nothing there. Instead we want to look for the same resources within
+/// [pathForLayers], using a relative-path conversion.
+///
+/// ## Example
+///
+/// Let's say `dartdoc` asks for 'styles.css' and this provider was constructed
+/// with
+///
+/// - [pathForLayers] = '$YOUR-PACKAGE/doc/assets/'
+/// - [layers] = '$YOUR-PACKAGE/my/resources/'
+///
+/// Here's what will happen:
+///
+/// 1. `dartdoc`'s asks the provider for '$YOUR-PACKAGE/doc/assets/styles.css'.
+/// 2. We check for and return that file if it exists.
+/// 3. If it doesn't exist, we convert the request into one for
+/// '$YOUR-PACKAGE/my/resources/styles.css'
+/// 4. We check for and return that file if it exists.
+/// 5. If _that_ doesn't exist, then we error out.
+///
+ResourceProvider obtainAssetsOverlayProvider(
+    {String pathForLayers = '', List<String> layers = const []}) {
   // TODO(Cliabhach): figure out how to future-proof for varying themes
   final base = PhysicalResourceProvider.INSTANCE;
   final overlay = OverlayResourceProvider(base);
