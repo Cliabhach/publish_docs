@@ -4,6 +4,8 @@
 import 'dart:io';
 
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/file_system/file_system.dart';
+import 'package:analyzer/file_system/overlay_file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:dartdoc/dartdoc.dart';
 
@@ -12,13 +14,26 @@ final PackageMetaProvider overlayPackageMetaProvider = PackageMetaProvider(
     PubPackageMeta.fromElement,
     PubPackageMeta.fromFilename,
     PubPackageMeta.fromDir,
-    PhysicalResourceProvider.INSTANCE,
+    obtainAssetsOverlayProvider(),
     PhysicalResourceProvider.INSTANCE
         .getFile(PhysicalResourceProvider.INSTANCE.pathContext
             .absolute(Platform.resolvedExecutable))
         .parent
         .parent,
     messageForMissingPackageMeta: messageForMissingMeta);
+
+/// A custom [ResourceProvider] that provides assets with a sort of 'fallback'.
+///
+/// If a resource exists at a 'doc/assets/' path in your project, then we
+/// return that. Else, we look in the following places, in order:
+/// 1. the 'lib/resources/' directory of this package
+ResourceProvider obtainAssetsOverlayProvider() {
+  // TODO(Cliabhach): figure out how to future-proof for varying themes
+  final base = PhysicalResourceProvider.INSTANCE;
+  final overlay = OverlayResourceProvider(base);
+
+  return overlay;
+}
 
 /// A modified copy of [PubPackageMeta.messageForMissingPackageMeta].
 ///
