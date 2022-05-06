@@ -37,8 +37,11 @@ Future<String> generateDocsPatch(GitDir gitDir, Directory outputDirectory,
   await generateFuture;
   logStatus('...there, documentation generated!');
   // Task 5: Save our changes into a patch (this creates 2 temp commits)
-  final patch = await patchOutOfGitDiff(gitDir, outputDirectory.path,
-      'docs: Regenerate to reflect $versionString',);
+  final patch = await patchOutOfGitDiff(
+    gitDir,
+    outputDirectory.path,
+    'docs: Regenerate to reflect $versionString',
+  );
   // Task 6: Reset branch back to original state
   if (patch.isEmpty) {
     throw UnsupportedError("Patch wasn't generated correctly. Stopping now.");

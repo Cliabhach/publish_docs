@@ -45,7 +45,11 @@ Future<void> updateGitHubPages(GitDir gitDir, List<String> arguments) async {
   final startingBranchRef = await startingBranch;
   // Task 2: Generate a documentation patch
   final patch = await generateDocsPatch(
-      gitDir, outputDirectory, arguments, startingBranchRef,);
+    gitDir,
+    outputDirectory,
+    arguments,
+    startingBranchRef,
+  );
   // Task 3: Switch branch
   await checkoutGitHubBranch(gitDir);
   // Task 4: Apply patch as a commit
@@ -53,34 +57,36 @@ Future<void> updateGitHubPages(GitDir gitDir, List<String> arguments) async {
   // Task 5: Print instructions
   final indexDocFile =
       Directory(path.absolute(outputDirectory.path, 'index.html'));
-  logStatus('''
-  The gh-pages branch has been updated. Please review the files in docs/api/ to
-  make sure there aren't any surprises there. We recommend opening the index.html
-  (located at file://${indexDocFile.path} )
-  in the browser, at the very least. If it all looks good and there are no
-  conflicts with the remote, you can push the new pages to GitHub with a simple
-  
-  `git push`
-  
-  If there's a conflict, or there are other issues with the changes, you can
-  remove the new commit by calling
-  
-  `git reset --hard HEAD~`
-  
-  The patch file used should still be around, in any case, if you want (or need)
-  to reapply it:
-  
-  `git am ${patch.trim()}`
-  
-  When you're done, run one of the following to return your original branch:
-  
-  `git switch -`
-  # or
-  `git checkout -`
-  # or
-  `git checkout ${startingBranchRef.branchName}`
-  
-  ''',);
+  logStatus(
+    '''
+The gh-pages branch has been updated. Please review the files in docs/api/ to
+make sure there aren't any surprises there. We recommend opening the index.html
+(located at file://${indexDocFile.path} )
+in the browser, at the very least. If it all looks good and there are no
+conflicts with the remote, you can push the new pages to GitHub with a simple
+
+`git push`
+
+If there's a conflict, or there are other issues with the changes, you can
+remove the new commit by calling
+
+`git reset --hard HEAD~`
+
+The patch file used should still be around, in any case, if you want (or need)
+to reapply it:
+
+`git am ${patch.trim()}`
+
+When you're done, run one of the following to return your original branch:
+
+`git switch -`
+# or
+`git checkout -`
+# or
+`git checkout ${startingBranchRef.branchName}`
+
+''',
+  );
   // Task 6: Switch back
   //await gitDir.checkoutBranch("prior", startingBranch);
   //logStatus("We're back at the original branch now.");
@@ -95,8 +101,10 @@ Future<void> sanityCheck(Directory binDirectory) {
   // Make sure this is the right repository
   return binDirectory.exists().then((doesExist) async {
     if (!doesExist || binDirectory.listSync().isEmpty) {
-      throw UnsupportedError('You have to run this from the root directory of'
-          " our project - otherwise the file operations won't work correctly.",);
+      throw UnsupportedError(
+        'You have to run this from the root directory of'
+        " our project - otherwise the file operations won't work correctly.",
+      );
     }
   });
 }

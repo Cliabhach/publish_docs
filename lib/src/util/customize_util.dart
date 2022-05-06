@@ -46,8 +46,10 @@ Future<DartdocOptionContext> generateAndWaitForDocs(
     });
     return docCompleter.future;
   } else {
-    throw UnsupportedError('Could not generate documentation; run the '
-        'gen_docs.dart task directly to see detailed error messages.',);
+    throw UnsupportedError(
+      'Could not generate documentation; run the '
+      'gen_docs.dart task directly to see detailed error messages.',
+    );
   }
 }
 
