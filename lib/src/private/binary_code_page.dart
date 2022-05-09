@@ -10,7 +10,7 @@ import 'package:convert/convert.dart';
 /// You can use this for 1:1 conversion between bytes and [Runes]. Strings made
 /// under this encoding might not be readable, and there is no guarantee that
 /// dart debuggers will be able to work with them correctly. Be careful.
-Encoding binaryEncoding = CodePage('binary', _concatenate128Digits());
+Encoding binaryEncoding = CodePage('binary', _concatenate256Digits());
 
 /// Code Pages must always have 256 entries.
 ///
@@ -18,7 +18,7 @@ Encoding binaryEncoding = CodePage('binary', _concatenate128Digits());
 /// doesn't matter if the entries are unsorted or jumbled up. The easiest thing
 /// to do is just [List.generate] the correct amount of entries, then
 /// concatenate them into a string for the [CodePage] constructor.
-String _concatenate128Digits() {
+String _concatenate256Digits() {
   final basis = List.generate(256, (index) => index);
   final as8 = Uint8List.fromList(basis);
 
