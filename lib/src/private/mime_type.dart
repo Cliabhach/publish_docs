@@ -14,7 +14,14 @@ class DocsMimeType {
   /// Create a new [DocsMimeType] with the specified value.
   DocsMimeType(this.type);
 
-  /// A standard mime type in the 'type/
+  /// A standard mime type in the 'type/subtype' format.
+  ///
+  /// These can be used to categorise and understand files. Some brief examples:
+  ///
+  /// - 'text/plain' represents a simple text ("plaintext") file.
+  /// - 'text/html' represents an HTML file.
+  /// - 'application/json' represents a stream of JSON.
+  /// - 'image/png' represents a PNG image.
   String type;
 
   /// Load the contents of [element] into a [String].
@@ -38,6 +45,10 @@ class DocsMimeType {
 }
 
 /// Figure out what mime type best reflects the given file.
+///
+/// Check out the docs on [DocsMimeType.type] and MDN's guide at
+/// (this page)[https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types]
+/// for a crash course in what mime types actually are and why they matter.
 ///
 /// Note that the standard library's [lookupMimeType] is woefully incomplete,
 /// so we try to request a type from the host machine via `xdg-mime` first. If
