@@ -34,7 +34,9 @@ class DocsMimeType {
   /// May throw an exception if something goes wrong during I/O.
   String readAsStringSync(fs.File element) {
     String contents;
-    if (type.startsWith('image') && !type.contains('xml')) {
+    final isBinaryImage = type.startsWith('image') && !type.contains('xml');
+    final isUnknownBinary = type.startsWith('application/octet-stream');
+    if (isBinaryImage || isUnknownBinary) {
       // It's a binary file. We need to use a custom encoding here.
       final normalFile = io.File(element.path);
       contents = normalFile.readAsStringSync(encoding: binaryEncoding);
