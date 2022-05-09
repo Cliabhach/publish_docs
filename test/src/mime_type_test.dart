@@ -36,15 +36,20 @@ void main() {
       expect(hostType, matches(RegExp('text/plain')));
     });
 
-    test('host check does understand LICENSE files', () async {
+    test('checks may understand binary files', () async {
       // Given
       final testFile = PhysicalResourceProvider.INSTANCE.getFile(
-        append(testResourceDirectory, 'test1', 'LICENSE').path
+        append(testResourceDirectory, 'test2', 'favicon.png').path
       );
 
       // When
+      final libraryType = await checkWithLibrary(testFile);
+      final hostType = checkWithHost(testFile);
 
       // Then
+      expect(libraryType, 'image/png');
+      expect(hostType, isNotNull);
+      expect(hostType!.trim(), 'image/png');
     });
   });
 }
