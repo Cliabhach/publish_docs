@@ -4,7 +4,7 @@ import 'dart:io' as io;
 
 import 'package:analyzer/file_system/file_system.dart' as fs;
 import 'package:mime/mime.dart';
-import 'package:publish_docs/src/util/binary_code_page.dart';
+import 'package:publish_docs/src/private/binary_code_page.dart';
 
 /// Representation of a mime type/MIME-type/mimetype.
 ///

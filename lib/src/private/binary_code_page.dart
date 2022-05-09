@@ -12,6 +12,12 @@ import 'package:convert/convert.dart';
 /// dart debuggers will be able to work with them correctly. Be careful.
 Encoding binaryEncoding = CodePage('binary', _concatenate128Digits());
 
+/// Code Pages must always have 256 entries.
+///
+/// We don't need to display any text in the [binaryEncoding] on screen, so it
+/// doesn't matter if the entries are unsorted or jumbled up. The easiest thing
+/// to do is just [List.generate] the correct amount of entries, then
+/// concatenate them into a string for the [CodePage] constructor.
 String _concatenate128Digits() {
   final basis = List.generate(256, (index) => index);
   final as8 = Uint8List.fromList(basis);
