@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 /// Utility file for working with analyzer and some filesystem concepts.
 
+import 'dart:async';
 import 'dart:io' as io;
 import 'dart:isolate';
 
@@ -107,18 +108,30 @@ String absolutePath(String part1, [String? part2]) {
 ///
 fs.ResourceProvider obtainAssetsOverlayProvider(
     {String pathForLayers = '', List<String> layers = const []}) {
-  // TODO(Cliabhach): figure out how to future-proof for varying themes
   final base = PhysicalResourceProvider.INSTANCE;
   final overlay = OverlayResourceProvider(base);
-  for (final layer in layers) {
-    base.getFolder(layer).getChildren().forEach(
-        (element) => _registerElement(element, pathForLayers, overlay, layer),
-    );
-  }
+  // NB: we cannot use a 'List.forEach' call here, as that makes dart run the
+  // body of the loop for as many elements as it can in parallel. And that
+  // breaks the 'overlay.hasOverlay' check seen inside _registerElement.
+  Future.forEach(layers, (String layer) async {
+    await _registerElementsInLayer(base, pathForLayers, overlay, layer,);
+  });
 
   return overlay;
 }
 
+/// Either register or ignore every file in the [layer] directory.
+Future<void> _registerElementsInLayer(fs.ResourceProvider base,
+    String pathForLayers, OverlayResourceProvider overlay,
+    String layer,) async {
+  base.getFolder(layer).getChildren().forEach((element) async {
+    await _registerElement(element, pathForLayers, overlay, layer);
+  });
+}
+
+/// Either [register][OverlayResourceProvider.setOverlay] or ignore [element].
+///
+/// TODO(Cliabhach): Document further
 Future<void> _registerElement(fs.Resource element, String pathForLayers,
     OverlayResourceProvider overlay, String layer,) async {
   final filename = path.basename(element.path);
