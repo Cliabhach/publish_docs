@@ -131,13 +131,17 @@ Future<void> _registerElementsInLayer(fs.ResourceProvider base,
 
 /// Either [register][OverlayResourceProvider.setOverlay] or ignore [element].
 ///
-/// TODO(Cliabhach): Document further
+/// If there is a resource with the same basename as 'element' in [overlay],
+/// this method does nothing. Otherwise, we'll try to figure out what kind of
+/// file it is and (if it _is_ a file and we have a valid [DocsMimeType]) add
+/// an entry for it into [overlay].
+///
+/// This method does _not_ replace existing overlays. Be careful about execution
+/// order, especially when calling this from an async method.
 Future<void> _registerElement(fs.Resource element, String pathForLayers,
     OverlayResourceProvider overlay, String layer,) async {
   final filename = path.basename(element.path);
   final pathForCaller = absolutePath(pathForLayers, filename);
-
-  //print('Considering registration for $pathForCaller.');
 
   if (overlay.hasOverlay(pathForCaller)) {
     // Already found in a prior layer; we can go on to the next element.
@@ -153,7 +157,6 @@ Future<void> _registerElement(fs.Resource element, String pathForLayers,
         content: mimeType.readAsStringSync(element),
         modificationStamp: element.modificationStamp,
       );
-      //print('_Registered overlay for "$filename" in $layer.');
     }
   } else {
     print('Ignoring detected Resource "$filename" in $layer.');
