@@ -6,6 +6,16 @@ import 'dart:isolate';
 import 'package:analyzer/file_system/file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 
+/// Retrieve the absolute, root-anchored, filesystem path to a file/directory.
+///
+/// This is a simplified alias to [path.absolute], which has more detailed
+/// docs.
+///
+/// See also [PhysicalResourceProvider.pathContext].
+String absolutePath(String part1, [String? part2]) {
+  return PhysicalResourceProvider.INSTANCE.pathContext.absolute(part1, part2);
+}
+
 /// Create a list of directories where we might find assets.
 ///
 /// We currently only return one item in that list, but in future we'd like to
