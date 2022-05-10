@@ -18,7 +18,7 @@ void main() {
       testResourcePath = resourcePath('overlay');
     });
     test('can retrieve physical files', () async {
-      provider = await obtainAssetsOverlayProvider();
+      provider = await obtainOverlayProvider();
 
       final test1Path = path.absolute(testResourcePath, 'test1');
       final testFolder = provider.getFolder(test1Path);
@@ -29,7 +29,7 @@ void main() {
       final test1Path = path.absolute(testResourcePath, 'test1');
       final parentPath = path.absolute(test1Path, 'parent');
 
-      provider = await obtainAssetsOverlayProvider(pathForLayers: parentPath);
+      provider = await obtainOverlayProvider(pathForLayers: parentPath);
 
       // ...now look for 'child.txt' and 'not-here.txt'
       final parentFolder = provider.getFolder(parentPath);
@@ -45,7 +45,7 @@ void main() {
 
       expect(Directory(fakeParentPath).existsSync(), isFalse);
 
-      provider = await obtainAssetsOverlayProvider(
+      provider = await obtainOverlayProvider(
         pathForLayers: fakeParentPath,
         layers: [
           parentPath
@@ -67,7 +67,7 @@ void main() {
 
       final parentPath = path.absolute(test2Path, 'parent');
 
-      provider = await obtainAssetsOverlayProvider(
+      provider = await obtainOverlayProvider(
         pathForLayers: parentPath,
         layers: [
           noFilesPath,
