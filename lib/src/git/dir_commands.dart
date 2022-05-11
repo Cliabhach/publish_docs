@@ -45,6 +45,12 @@ class GitDirCommands implements GitCommands {
   }
 
   @override
+  Future<Iterable<String>> get commits {
+    // GitDir returns commits in a 'CommitSha -> Commit' format
+    return gitDir.commits().then((refs) => refs.keys);
+  }
+
+  @override
   Future<String> formatPatch(String gitStartRef, String gitEndRef) {
     return gitDir.runCommand(['format-patch', '$gitStartRef..$gitEndRef',])
         .then(_getOutput);
