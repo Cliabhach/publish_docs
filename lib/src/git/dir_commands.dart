@@ -41,7 +41,7 @@ class GitDirCommands implements GitCommands {
 
   @override
   Future<void> commit(String message) {
-    return gitDir.runCommand(['commit', ]);
+    return gitDir.runCommand(['commit', '-m', message,]);
   }
 
   @override
