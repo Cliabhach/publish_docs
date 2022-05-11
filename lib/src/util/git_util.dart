@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: BSD-3-Clause
 /// Utility file for working with Git, mainly via the [GitCommands] class.
 
+import 'package:meta/meta.dart';
+
 import 'package:publish_docs/src/git/commands.dart';
 
 /// Retrieve the git short hash for the currently-checked-out commit.
@@ -37,6 +39,7 @@ Future<String> patchOutOfGitDiff(GitCommands git, String path, String message) {
 ///
 /// In order to do that, we have to pass the first two [GitCommands.commits]
 /// to [GitCommands.formatPatch].
+@visibleForTesting
 Future<String> doFormatPatch(GitCommands git) async {
   final commitList = await git.commits;
   final newDocsCommit = commitList.first;
