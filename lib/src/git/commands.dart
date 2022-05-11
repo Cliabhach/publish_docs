@@ -32,13 +32,18 @@ abstract class GitCommands {
   /// To be used along-side [formatPatch].
   Future<void> am(String patchFilePath);
 
+  /// Retrieve the name of the current branch.
+  ///
+  /// Equivalent to `git symbolic-ref HEAD`.
+  Future<String> branchName();
+
   /// Retrieve the SHA-1 hash for the current tip of a git branch.
   ///
   /// Note that this hash will change if a [commit] is added to the branch, or
   /// if it is [reset] to a specific hash.
   ///
-  /// Pass `null` to request the SHA-1 hash of the current branch.
-  Future<String> branchSha(String? name);
+  /// By default, we request the SHA-1 hash of the current branch.
+  Future<String> branchSha({String name = 'HEAD'});
 
   /// Change the contents of one or more files to match those in a given commit.
   ///
