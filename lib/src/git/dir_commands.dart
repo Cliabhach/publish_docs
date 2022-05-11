@@ -31,6 +31,22 @@ class GitDirCommands implements GitCommands {
   }
 
   @override
+  Future<String> branchSha(String? name) {
+    if (name == null) {
+      return gitDir.currentBranch().then((ref) => ref.sha);
+    } else {
+      return gitDir.branchReference(name).then((ref) {
+        if (ref == null) {
+          throw UnsupportedError(
+            "The $name branch is missing...that's not good.",
+          );
+        }
+        return ref.sha;
+      });
+    }
+  }
+
+  @override
   Future<void> checkout(String gitRef, {List<String> paths = const []}) {
     if (paths.isEmpty) {
       return gitDir.runCommand(['checkout', gitRef,]);
