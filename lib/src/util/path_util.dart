@@ -15,6 +15,16 @@ String absolutePath(String part1, [String? part2]) {
 }
 
 /// We only run if the host project has created a 'doc/assets/' directory.
+///
+/// There are about 8 files defined in 'resourceNames' in dartdoc's
+/// [html_resources.g.dart](https://github.com/dart-lang/dartdoc/blob/26d38618/lib/src/generator/html_resources.g.dart).
+///
+/// We will try to load each of those files from the 'docs/assets/' directory.
+/// Any that are _not_ present in that directory will instead be loaded from
+/// one of our fallback directories.
+///
+/// See `lib/src/private/assets_layers.dart` for the exact paths to our
+/// fallback directories.
 void checkForAssetsDirectory(String assetsAbsolutePath) {
   final assetsDirectory = Directory(assetsAbsolutePath);
 
