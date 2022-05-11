@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:git/git.dart';
 
-import 'package:publish_docs/src/util/customize_util.dart';
+import 'package:publish_docs/src/operation/customize_util.dart';
 import 'package:publish_docs/src/util/doc_util.dart';
 import 'package:publish_docs/src/util/git_util.dart';
 

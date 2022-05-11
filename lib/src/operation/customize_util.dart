@@ -8,7 +8,7 @@ import 'package:dartdoc/options.dart';
 import 'package:git/git.dart';
 
 import 'package:publish_docs/src/private/assets_layers.dart';
-import 'package:publish_docs/src/util/analyzer_util.dart';
+import 'package:publish_docs/src/operation/analyzer_util.dart';
 import 'package:publish_docs/src/util/doc_util.dart';
 import 'package:publish_docs/src/util/git_util.dart';
 
