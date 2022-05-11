@@ -39,5 +39,25 @@ void main() {
       // (everything else should be an option)
       expect(capturedList.every((element) => element.startsWith('--')), true);
     });
+
+    test('format-patch uses only two commits', () async {
+      // Given
+      const expectedPatchName = '0001-formatted.patch\n';
+      when(() => git.commits).thenAnswer(futureAnswer(() => ['A', 'B', 'C']));
+      when(() => git.formatPatch(any(), any()))
+          .thenAnswer(futureAnswer(() => expectedPatchName));
+
+      // When
+      final patchName = await doFormatPatch(git);
+
+      // Then
+      verify(() => git.commits).called(1);
+      // (order matters)
+      verify(() => git.formatPatch('B', 'A')).called(1);
+      // (the git command is not expected to trim off newline characters)
+      // (though, if desired, we can change that in a future release)
+      expect(patchName.endsWith('\n'), true);
+      expect(patchName, expectedPatchName);
+    });
   });
 }
