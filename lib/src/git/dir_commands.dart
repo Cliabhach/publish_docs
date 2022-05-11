@@ -60,8 +60,8 @@ class GitDirCommands implements GitCommands {
   }
 
   @override
-  Future<void> revParse(Iterable<String> args) {
-    return gitDir.runCommand(['rev-parse', ] + args.toList());
+  Future<String> revParse(Iterable<String> args) {
+    return gitDir.runCommand(['rev-parse', ] + args.toList()).then(_getOutput);
   }
 
   @override
