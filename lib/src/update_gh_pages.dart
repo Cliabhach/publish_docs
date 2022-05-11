@@ -6,7 +6,7 @@ import 'package:git/git.dart';
 
 import 'package:path/path.dart' as path;
 
-import 'package:publish_docs/src/operation/pages_util.dart';
+import 'package:publish_docs/src/operation/gh_pages_patch.dart';
 import 'package:publish_docs/src/util/git_util.dart';
 
 /// GitHub Pages only knows how to read from two possible locations:

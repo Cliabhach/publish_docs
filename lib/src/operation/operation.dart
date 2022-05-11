@@ -1,3 +1,3 @@
-export 'analyzer_util.dart';
-export 'customize_util.dart';
-export 'pages_util.dart';
+export 'assets_meta_provider.dart';
+export 'docs_bridge.dart';
+export 'gh_pages_patch.dart';
