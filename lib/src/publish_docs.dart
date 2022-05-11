@@ -52,7 +52,7 @@ Future<void> updateGitHubDocs(List<String> arguments) {
   return GitDir.isGitDir(currentPath).then((isGitDirectory) {
     if (isGitDirectory) {
       GitDir.fromExisting(currentPath)
-          .then((gitDir) async => await updateGitHubPages(gitDir, arguments));
+          .then((gitDir) async => updateGitHubPages(gitDir, arguments));
     }
   });
 }
