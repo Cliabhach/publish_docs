@@ -16,7 +16,7 @@ Future<String> obtainGitVersion(GitCommands forGit) async {
 /// The patch can then be used for a call to [GitDirExtension.applyPatch].
 Future<String> patchOutOfGitDiff(
     GitCommands forGit, String path, String message) {
-  // Q: How do you run format-patch on the working diff that hasn't been commited yet?
+  // Q: How do you run format-patch on the working diff that is not committed?
   // A: Well, create a commit first.
 
   return Future(() {
@@ -75,21 +75,13 @@ extension GitDirExtension on GitCommands {
     return am(patchFile.trim());
   }
 
-  /// Switch all of [paths] to branch [name], using [target].
+  /// Switch all of [paths] to the branch whose SHA-1 hash is [sha].
   ///
-  /// If that [BranchReference] turns out to be null we'll throw an error.
-  Future<void> checkoutBranch(
-      String name, Future<BranchReference?> target,
-      {List<String> paths = const []}) {
-    return target.then((branchRef) {
-      // We should upstream the 'checkout' method. Maybe.
-      if (branchRef == null) {
-        throw UnsupportedError(
-          "The $name branch is missing...that's not good.",
-        );
-      } else {
-        return checkout(branchRef.branchName, paths: paths);
-      }
-    });
+  /// Make sure to provide a SHA-1 of the commit itself, and not the tree SHA
+  /// of the contents of the commit. The [GitCommands.branchSha] method will
+  /// return the right value for [sha].
+  Future<void> checkoutBranch(String sha, {List<String> paths = const []}) {
+    // We should upstream the 'checkout' method. Maybe.
+    return checkout(sha, paths: paths);
   }
 }
