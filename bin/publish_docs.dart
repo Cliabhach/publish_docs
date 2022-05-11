@@ -23,6 +23,4 @@ $ dart pub run publish_docs:commit
 or
 $ flutter pub run publish_docs:commit
 ''');
-
-  await generateDocs(arguments);
 }
