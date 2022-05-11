@@ -6,31 +6,30 @@ import 'package:publish_docs/src/git/commands.dart';
 /// Retrieve the git short hash for the currently-checked-out commit.
 ///
 /// See also [this rev-parse overview](https://git-scm.com/docs/git-rev-parse).
-Future<String> obtainGitVersion(GitCommands forGit) async {
-  return forGit.revParse(['--short', '--verify', 'HEAD']);
+Future<String> obtainGitVersion(GitCommands git) async {
+  return git.revParse(['--short', '--verify', 'HEAD']);
 }
 
 /// Format local changes (from 'git format-patch') into a Git Patch.
 ///
 /// The patch can then be used for a call to [GitCommandsExtension.applyPatch].
-Future<String> patchOutOfGitDiff(
-    GitCommands forGit, String path, String message) {
+Future<String> patchOutOfGitDiff(GitCommands git, String path, String message) {
   // Q: How do you run format-patch on the working diff that is not committed?
   // A: Well, create a commit first.
 
   return Future(() {
     // Create temporary commit (1) with existing docs. These were added to the
     // index by the 'checkout' command.
-    return forGit.commit('$message (files in index)');
+    return git.commit('$message (files in index)');
   }).then((commitResult) async {
     // Add new docs to the index
-    return forGit.add(path);
+    return git.add(path);
   }).then((addResult) async {
     // Create temporary commit (2) with new docs
-    return forGit.commit(message);
+    return git.commit(message);
   }).then((commitResult) async {
     // Return the patch's filename
-    return doFormatPatch(forGit);
+    return doFormatPatch(git);
   });
 }
 
