@@ -58,8 +58,8 @@ extension GitDirExtension on GitCommands {
   /// If you accidentally run this with the wrong ref, promptly use `git reflog`
   /// to find the prior commit. You can `git reset --hard` to that in order to
   /// minimise the damage.
-  Future<void> hardReset(CommitReference ref) {
-    return reset(ref.sha, hard: true);
+  Future<void> hardReset(String ref) {
+    return reset(ref, hard: true);
   }
 
   /// Apply and commit a git patch to the Git directory.
