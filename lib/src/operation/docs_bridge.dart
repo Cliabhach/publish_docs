@@ -5,8 +5,8 @@ import 'dart:async';
 
 import 'package:dartdoc/dartdoc.dart';
 import 'package:dartdoc/options.dart';
-import 'package:git/git.dart';
 
+import 'package:publish_docs/src/git/commands.dart';
 import 'package:publish_docs/src/operation/assets_meta_provider.dart';
 import 'package:publish_docs/src/util/doc_util.dart';
 import 'package:publish_docs/src/util/git_util.dart';
@@ -16,13 +16,13 @@ import 'package:publish_docs/src/util/path_util.dart';
 ///
 /// Will always return a valid https://semver.org/ String. The short git commit
 /// hash will be in the 'metadata' part of that version.
-Future<String> obtainDocsVersion(GitDir forGit) async {
+Future<String> obtainDocsVersion(GitCommands git) async {
   // Part 1: Git
   // Short Git-Hash for the currently-checked-out commit
-  final currentHash = await obtainGitVersion(forGit);
+  final currentHash = await obtainGitVersion(git);
 
   // Part 2: Dart
-  final pubspecVersion = obtainAppVersion(forGit.path);
+  final pubspecVersion = obtainAppVersion(git.path);
 
   // We combine these two into a semver-compatible version string
   return '$pubspecVersion+$currentHash';
