@@ -7,15 +7,13 @@
 // Source of `generateDocs` was in dartdoc-5.0.1, at path `/bin/dartdoc.dart`
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:git/git.dart';
-import 'package:path/path.dart' as Path;
+import 'package:path/path.dart' as path;
 
 import 'package:publish_docs/publish_docs.dart';
 import 'package:publish_docs/src/git/dir_commands.dart';
 import 'package:publish_docs/src/operation/operation.dart';
-import 'package:publish_docs/src/util/util.dart';
 
 /// Analyzes Dart files and generates a representation of included libraries,
 /// classes, and members. Uses the current directory to look for libraries.
@@ -43,7 +41,7 @@ Future<void> generateDocs(List<String> arguments) async {
 /// We currently use a [GitDir]-backed [GitDirCommands] object to perform those
 /// operations.
 Future<void> updateGitHubDocs(List<String> arguments) {
-  final currentPath = Path.current;
+  final currentPath = path.current;
 
   return GitDir.isGitDir(currentPath).then((isGitDirectory) {
     if (isGitDirectory) {
