@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
-/// Utility file for working with Git, mainly via [GitDir] and [GitCommands].
+/// Utility file for working with Git, mainly via the [GitCommands] class.
 
-import 'package:git/git.dart';
 import 'package:publish_docs/src/git/commands.dart';
 
 /// Retrieve the git short hash for the currently-checked-out commit.
@@ -13,7 +12,7 @@ Future<String> obtainGitVersion(GitCommands forGit) async {
 
 /// Format local changes (from 'git format-patch') into a Git Patch.
 ///
-/// The patch can then be used for a call to [GitDirExtension.applyPatch].
+/// The patch can then be used for a call to [GitCommandsExtension.applyPatch].
 Future<String> patchOutOfGitDiff(
     GitCommands forGit, String path, String message) {
   // Q: How do you run format-patch on the working diff that is not committed?
@@ -47,8 +46,8 @@ Future<String> doFormatPatch(GitCommands git) async {
   return git.formatPatch(oldDocsCommit, newDocsCommit);
 }
 
-/// A basic extension for [GitDir] with branch and reset capabilities.
-extension GitDirExtension on GitCommands {
+/// A basic extension for [GitCommands] with branch and reset capabilities.
+extension GitCommandsExtension on GitCommands {
 
   /// Force the Git directory to look exactly like the specified commit.
   ///
