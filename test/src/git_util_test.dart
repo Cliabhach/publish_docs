@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, directives_ordering
+// ignore_for_file: cascade_invocations
 
 import 'package:mocktail/mocktail.dart';
 import 'package:publish_docs/src/git/commands.dart';
@@ -57,6 +58,33 @@ void main() {
       // (the git command is not expected to trim off newline characters)
       // (though, if desired, we can change that in a future release)
       expect(patchName.endsWith('\n'), true);
+      expect(patchName, expectedPatchName);
+    });
+
+    test('patch out of diff makes two commits', () async {
+      // Given
+      const path = '/path/to/doc/files';
+      const message = 'some commit message';
+      const expectedPatchName = '0001-formatted.patch\n';
+      when(() => git.add(any())).thenAnswer(futureVoidAnswer());
+      when(() => git.commits).thenAnswer(
+          futureAnswer(() => ['At', 'least', '2', 'values']));
+      when(() => git.commit(any())).thenAnswer(futureVoidAnswer());
+      when(() => git.formatPatch(any(), any()))
+          .thenAnswer(futureAnswer(() => expectedPatchName));
+
+      // When
+      final patchName = await patchOutOfGitDiff(git, path, message);
+
+      // Then
+      final resAdd = verify(() => git.add(captureAny()));
+      final resCommit = verify(() => git.commit(captureAny()));
+
+      resAdd.called(1);
+      expect(resAdd.captured.first, path);
+      resCommit.called(2);
+      expect(resCommit.captured.first, 'some commit message (files in index)');
+      expect(resCommit.captured.last, message);
       expect(patchName, expectedPatchName);
     });
   });

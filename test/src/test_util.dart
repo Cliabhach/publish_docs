@@ -52,6 +52,15 @@ Resource relative(ResourceProvider provider, String parent, String child) {
   return provider.getResource(path.absolute(parent, child));
 }
 
+/// Variant of [futureAnswer] that returns a void-typed Future.
+///
+/// Handy for mocking out certain kinds of functions with Mocktail.
+Answer<Future<void>> futureVoidAnswer() {
+  return (invocation) => Future<void>(() {
+    return;
+  });
+}
+
 /// Simple wrapper around an [Answer] that returns a [Future].
 ///
 /// For use with Mocktail-based mocking tests.
