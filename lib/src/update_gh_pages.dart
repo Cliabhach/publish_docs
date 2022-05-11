@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:publish_docs/src/git/commands.dart';
-import 'package:publish_docs/src/git/dir_commands.dart';
 
 import 'package:publish_docs/src/operation/gh_pages_patch.dart';
 import 'package:publish_docs/src/util/git_util.dart';
@@ -38,18 +37,18 @@ import 'package:publish_docs/src/util/git_util.dart';
 /// _in_ `docs/api/`, then they'll be erased during the 'checkout' step.
 Future<void> updateGitHubPages(GitCommands git, List<String> arguments) async {
   // Task 0: Save current state, in case something goes wrong.
-  final startingBranch = (git as GitDirCommands).gitDir.currentBranch();
+  final startingBranchSha = await git.branchSha();
+  final startingBranchName = await git.branchName();
   await git.stash();
   logStatus('Found the git directory.');
   // Task 1: Define constants for use in this function
   final outputDirectory = Directory(path.absolute('docs', 'api'));
-  final startingBranchRef = await startingBranch;
   // Task 2: Generate a documentation patch
   final patch = await generateDocsPatch(
     git,
     outputDirectory,
     arguments,
-    startingBranchRef.sha,
+    startingBranchSha,
   );
   // Task 3: Switch branch
   await checkoutGitHubBranch(git);
@@ -84,11 +83,11 @@ When you're done, run one of the following to return your original branch:
 # or
 `git checkout -`
 # or
-`git checkout ${startingBranchRef.branchName}`
+`git checkout $startingBranchName`
 
 ''',
   );
   // Task 6: Switch back
-  //await gitDir.checkoutBranch("prior", startingBranch);
+  // await git.checkoutBranch(startingBranchSha);
   //logStatus("We're back at the original branch now.");
 }
