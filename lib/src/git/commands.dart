@@ -49,6 +49,9 @@ abstract class GitCommands {
   ///
   /// By itself this command does not modify the git staging index. To remove
   /// files from _that_, use [reset].
+  ///
+  /// If [paths] is empty, we try to checkout _all_ files within the repository,
+  /// which is usually what you want when you're looking to checkout a branch.
   Future<void> checkout(String gitRef, {List<String> paths = const []});
 
   /// Record the git staging index in the regular git index.
