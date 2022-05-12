@@ -9,10 +9,9 @@ import 'package:analyzer/file_system/file_system.dart' as fs;
 import 'package:analyzer/file_system/overlay_file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:dartdoc/dartdoc.dart';
-import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path;
 
-import 'package:publish_docs/src/util/binary_code_page.dart';
+import 'package:publish_docs/src/private/mime_type.dart';
 
 /// A modified copy of [pubPackageMetaProvider].
 Future<PackageMetaProvider> overlayPackageMetaProvider() async {
@@ -117,73 +116,23 @@ Future<void> _registerElement(fs.Resource element, String pathForLayers,
     // Already found in a prior layer; we can go on to the next element.
   } else if (element is fs.File) {
 
-    final mimeType = await _queryMimeType(element);
+    final mimeType = await queryMimeType(element);
 
     if (mimeType == null) {
       // Can't figure out what kind of file $filename is. Skip it.
     } else {
-      if (mimeType.startsWith('image') && !mimeType.contains('xml')) {
-        // It's a binary file. We need to use a custom encoding here.
-        final normalFile = io.File(element.path);
-        final contents = normalFile.readAsStringSync(encoding: binaryEncoding);
-        overlay.setOverlay(
-          pathForCaller,
-          content: contents,
-          modificationStamp: element.modificationStamp
-        );
-      } else {
-        overlay.setOverlay(
-          pathForCaller,
-          content: element.readAsStringSync(),
-          modificationStamp: element.modificationStamp,
-        );
-      }
+      overlay.setOverlay(
+        pathForCaller,
+        content: mimeType.readAsStringSync(element),
+        modificationStamp: element.modificationStamp,
+      );
     }
   } else {
     print('Ignoring detected Resource "$filename" in $layer.');
   }
 }
 
-/// Figure out what mime type best reflects the given file.
-///
-/// Note that the standard library's [lookupMimeType] is woefully incomplete,
-/// so we try to request a type from the host machine via `xdg-mime` first. If
-/// the host does not have `xdg-mime` configured, then we fall back to the
-/// library.
-Future<String?> _queryMimeType(fs.File file) async {
-  String? xdgMimeType;
 
-  if (io.Platform.isLinux || io.Platform.isMacOS || io.Platform.isAndroid) {
-    // Try to use the host's 'xdg-mime' tool
-    final result = io.Process.runSync('xdg-mime', [
-      'query',
-      'filetype',
-      file.path
-    ]);
-
-    if (result.exitCode == 0) {
-      xdgMimeType = result.stdout as String;
-    }
-  }
-
-  if (xdgMimeType != null) {
-    return xdgMimeType;
-  } else {
-    // 'xdg-mime' was unavailable or could not identify the file
-    final normalFile = io.File(file.path);
-    final firstFewBytes = await normalFile
-        .openRead(0, 12) // No need to read more bytes. Library only checks 12.
-        .reduce((previous, element) => previous + element);
-
-    final type = lookupMimeType(file.path, headerBytes: firstFewBytes);
-
-    if (type == null) {
-      print('> Got bytes $firstFewBytes.');
-    }
-
-    return type;
-  }
-}
 
 /// A modified copy of [PubPackageMeta.messageForMissingPackageMeta].
 ///
