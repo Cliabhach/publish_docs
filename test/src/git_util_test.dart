@@ -61,6 +61,23 @@ void main() {
       expect(patchName, expectedPatchName);
     });
 
+    test('format-patch crashes on fewer commits', () async {
+      // Given
+      when(() => git.commits).thenAnswer(futureAnswer(() => []));
+
+      // When
+      final patchFail0 = doFormatPatch(git);
+      // (only 1 commit)
+      when(() => git.commits).thenAnswer(futureAnswer(() => ['1']));
+      final patchFail1 = doFormatPatch(git);
+
+      // Then
+      await expectLater(patchFail0, throwsA(isA<StateError>()));
+      await expectLater(patchFail1, throwsA(isA<StateError>()));
+      verify(() => git.commits).called(2);
+      verifyNever(() => git.formatPatch(any(), any()));
+    });
+
     test('patch out of diff makes two commits', () async {
       // Given
       const path = '/path/to/doc/files';
@@ -86,6 +103,9 @@ void main() {
       expect(resCommit.captured.first, 'some commit message (files in index)');
       expect(resCommit.captured.last, message);
       expect(patchName, expectedPatchName);
+
+      verify(() => git.commits).called(1);
+      verify(() => git.formatPatch('least', 'At')).called(1);
     });
   });
 }
