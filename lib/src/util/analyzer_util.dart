@@ -17,14 +17,13 @@ import 'package:publish_docs/src/private/mime_type.dart';
 Future<PackageMetaProvider> overlayPackageMetaProvider() async {
 
   final provider = obtainAssetsOverlayProvider(
-      pathForLayers: path.absolute('doc', 'assets'),
+      pathForLayers: absolutePath('doc', 'assets'),
       layers: await _publishDocsResourceLayers() + [
       ]
     );
 
   final sdkDir = PhysicalResourceProvider.INSTANCE
-        .getFile(PhysicalResourceProvider.INSTANCE.pathContext
-            .absolute(io.Platform.resolvedExecutable))
+        .getFile(absolutePath(io.Platform.resolvedExecutable))
         .parent
         .parent;
 
@@ -59,6 +58,16 @@ Future<String> _uriAsPath(String uri, fs.ResourceProvider provider) async {
   } else {
     return provider.getFolder(resolvedUri.toFilePath()).path;
   }
+}
+
+/// Retrieve the absolute, root-anchored, filesystem path to a file/directory.
+///
+/// This is a simplified alias to [path.absolute], which has more detailed
+/// docs.
+///
+/// See also [PhysicalResourceProvider.pathContext].
+String absolutePath(String part1, [String? part2]) {
+  return PhysicalResourceProvider.INSTANCE.pathContext.absolute(part1, part2);
 }
 
 /// A custom [fs.ResourceProvider] that provides assets with a 'fallback'.
@@ -110,7 +119,7 @@ fs.ResourceProvider obtainAssetsOverlayProvider(
 Future<void> _registerElement(fs.Resource element, String pathForLayers,
     OverlayResourceProvider overlay, String layer,) async {
   final filename = path.basename(element.path);
-  final pathForCaller = path.absolute(pathForLayers, filename);
+  final pathForCaller = absolutePath(pathForLayers, filename);
 
   if (overlay.hasOverlay(pathForCaller)) {
     // Already found in a prior layer; we can go on to the next element.
