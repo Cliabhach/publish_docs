@@ -40,6 +40,6 @@ String obtainAppVersion(String gitDirectory) {
   final appFolder = metaProvider.resourceProvider.getFolder(gitDirectory);
   // Assert non-null value. If the metadata is null, pubspec might be damaged.
   // That's not a thing we can fix here.
-  String pubspecVersion = metaProvider.fromDir(appFolder)!.version;
+  final pubspecVersion = metaProvider.fromDir(appFolder)!.version;
   return pubspecVersion;
 }

@@ -9,7 +9,6 @@ import 'package:path/path.dart' as Path;
 import 'util/git_util.dart';
 import 'util/pages_util.dart';
 
-
 /// GitHub Pages only knows how to read from two possible locations:
 ///
 /// 1. the API root
@@ -39,14 +38,14 @@ import 'util/pages_util.dart';
 Future<void> updateGitHubPages(GitDir gitDir, List<String> arguments) async {
   // Task 0: Save current state, in case something goes wrong.
   final startingBranch = gitDir.currentBranch();
-  gitDir.runCommand(['stash']);
+  await gitDir.runCommand(['stash']);
   logStatus('Found the git directory.');
   // Task 1: Define constants for use in this function
   final outputDirectory = Directory(Path.absolute('docs', 'api'));
   final startingBranchRef = await startingBranch;
   // Task 2: Generate a documentation patch
-  String patch = await generateDocsPatch(
-      gitDir, outputDirectory, arguments, startingBranchRef);
+  final patch = await generateDocsPatch(
+      gitDir, outputDirectory, arguments, startingBranchRef,);
   // Task 3: Switch branch
   await checkoutGitHubBranch(gitDir);
   // Task 4: Apply patch as a commit
@@ -81,7 +80,7 @@ Future<void> updateGitHubPages(GitDir gitDir, List<String> arguments) async {
   # or
   `git checkout ${startingBranchRef.branchName}`
   
-  ''');
+  ''',);
   // Task 6: Switch back
   //await gitDir.checkoutBranch("prior", startingBranch);
   //logStatus("We're back at the original branch now.");
@@ -95,9 +94,9 @@ Future<void> updateGitHubPages(GitDir gitDir, List<String> arguments) async {
 Future<void> sanityCheck(Directory binDirectory) {
   // Make sure this is the right repository
   return binDirectory.exists().then((doesExist) async {
-    if (!doesExist || binDirectory.listSync(recursive: false).isEmpty) {
-      throw UnsupportedError("You have to run this from the root directory of"
-          " our project - otherwise the file operations won't work correctly.");
+    if (!doesExist || binDirectory.listSync().isEmpty) {
+      throw UnsupportedError('You have to run this from the root directory of'
+          " our project - otherwise the file operations won't work correctly.",);
     }
   });
 }

@@ -17,13 +17,13 @@ import 'git_util.dart';
 Future<String> obtainDocsVersion(GitDir forGit) async {
   // Part 1: Git
   // Short Git-Hash for the currently-checked-out commit
-  String currentHash = await obtainGitVersion(forGit);
+  final currentHash = await obtainGitVersion(forGit);
 
   // Part 2: Dart
-  String pubspecVersion = obtainAppVersion(forGit.path);
+  final pubspecVersion = obtainAppVersion(forGit.path);
 
   // We combine these two into a semver-compatible version string
-  return "$pubspecVersion+$currentHash";
+  return '$pubspecVersion+$currentHash';
 }
 
 /// (Re-)Generate documentation using [Dartdoc].
@@ -35,18 +35,19 @@ Future<String> obtainDocsVersion(GitDir forGit) async {
 /// 2. throw a custom error if the [Dartdoc] object comes back as null.
 ///
 /// See also [obtainDartdoc] and [addAssets].
-Future<DartdocOptionContext> generateAndWaitForDocs(List<String> arguments) async {
+Future<DartdocOptionContext> generateAndWaitForDocs(
+    List<String> arguments) async {
   final metaProvider = pubPackageMetaProvider;
   final dartdoc = await getDartdocWithAssets(metaProvider, arguments);
   if (dartdoc != null) {
-    Completer<DartdocOptionContext> docCompleter = Completer();
+    final docCompleter = Completer<DartdocOptionContext>();
     dartdoc.executeGuarded((context) async {
       return docCompleter.complete(context);
     });
     return docCompleter.future;
   } else {
-    throw UnsupportedError("Could not generate documentation; run the "
-        "gen_docs.dart task directly to see detailed error messages.");
+    throw UnsupportedError('Could not generate documentation; run the '
+        'gen_docs.dart task directly to see detailed error messages.',);
   }
 }
 
@@ -62,9 +63,9 @@ Future<Dartdoc?> getDartdocWithAssets(
   Dartdoc? dartdoc;
 
   // Request usage of our 'assets' instead of dartdoc's bundled resources.
-  List<String> modifiedArguments = addAssets(metaProvider, arguments);
+  final modifiedArguments = addAssets(metaProvider, arguments);
 
-  var config = parseOptions(metaProvider, modifiedArguments);
+  final config = parseOptions(metaProvider, modifiedArguments);
   if (config == null) {
     // There was an error while parsing options.
     dartdoc = null;
@@ -81,8 +82,8 @@ Future<Dartdoc?> getDartdocWithAssets(
 /// Use the returned list for a call to [parseOptions].
 List<String> addAssets(
     PackageMetaProvider metaProvider, List<String> arguments) {
-  var assetsAbsolutePath =
+  final assetsAbsolutePath =
       metaProvider.resourceProvider.pathContext.absolute('doc', 'assets');
-  var modifiedArguments = arguments + ['--resources-dir', assetsAbsolutePath];
+  final modifiedArguments = arguments + ['--resources-dir', assetsAbsolutePath];
   return modifiedArguments;
 }
