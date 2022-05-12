@@ -102,7 +102,8 @@ extension GitDirExtension on GitDir {
       // We should upstream the 'checkout' method. Maybe.
       if (branchRef == null) {
         throw UnsupportedError(
-            "The $name branch is missing...that's not good.",);
+          "The $name branch is missing...that's not good.",
+        );
       } else {
         return checkout(branchRef.branchName, paths: paths);
       }
