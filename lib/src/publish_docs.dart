@@ -17,14 +17,6 @@ import 'package:publish_docs/src/git/dir_commands.dart';
 import 'package:publish_docs/src/operation/operation.dart';
 import 'package:publish_docs/src/util/util.dart';
 
-/// {@template publish_docs}
-/// Publish your documentation to GitHub Pages!
-/// {@endtemplate}
-class PublishDocs {
-  /// {@macro publish_docs}
-  const PublishDocs();
-}
-
 /// Analyzes Dart files and generates a representation of included libraries,
 /// classes, and members. Uses the current directory to look for libraries.
 Future<void> generateDocs(List<String> arguments) async {
