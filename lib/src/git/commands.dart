@@ -2,6 +2,7 @@
 
 /// An abstraction over [Git](https://git-scm.com/).
 ///
+/// There is one implementation in `GitDirCommands`.
 abstract class GitCommands {
 
   /// Add the content of one or more files to the git staging index.
