@@ -44,7 +44,7 @@ Future<PackageMetaProvider> overlayPackageMetaProvider() async {
 Future<List<String>> _publishDocsResourceLayers() async {
   final provider = PhysicalResourceProvider.INSTANCE;
   const ourPackage = 'package:publish_docs';
-  final base = _uriAsPath('$ourPackage/resources', provider);
+  final base = _uriAsPath('$ourPackage/resources/dartdoc-5.1.0', provider);
   return [ await base ];
 }
 
