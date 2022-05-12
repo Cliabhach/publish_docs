@@ -27,42 +27,42 @@ import 'package:watcher/watcher.dart';
 ///
 /// This provider does not report watch events when overlays are added, modified
 /// or removed.
-class OverlayResourceProvider implements ResourceProvider {
+class AssetsResourceProvider implements ResourceProvider {
   /// The underlying resource provider used to access files and folders that
   /// do not have an overlay.
   final ResourceProvider baseProvider;
 
   /// A map from the paths of files for to the overlay data.
-  final Map<String, _OverlayFileData> _overlays = {};
+  final Map<String, _AssetsFileData> _overlays = {};
 
   /// Initialize a newly created resource provider to represent an overlay on
   /// the given [baseProvider].
-  OverlayResourceProvider(this.baseProvider);
+  AssetsResourceProvider(this.baseProvider);
 
   @override
   pathos.Context get pathContext => baseProvider.pathContext;
 
   @override
-  File getFile(String path) => _OverlayFile(this, baseProvider.getFile(path));
+  File getFile(String path) => _AssetsFile(this, baseProvider.getFile(path));
 
   @override
   Folder getFolder(String path) =>
-      _OverlayFolder(this, baseProvider.getFolder(path));
+      _AssetsFolder(this, baseProvider.getFolder(path));
 
   @override
   Resource getResource(String path) {
     if (hasOverlay(path)) {
-      return _OverlayResource._from(this, baseProvider.getFile(path));
+      return _AssetsResource._from(this, baseProvider.getFile(path));
     } else if (_hasOverlayIn(path)) {
-      return _OverlayResource._from(this, baseProvider.getFolder(path));
+      return _AssetsResource._from(this, baseProvider.getFolder(path));
     }
-    return _OverlayResource._from(this, baseProvider.getResource(path));
+    return _AssetsResource._from(this, baseProvider.getResource(path));
   }
 
   @override
   Folder? getStateLocation(String pluginId) {
     var location = baseProvider.getStateLocation(pluginId);
-    return location != null ? _OverlayFolder(this, location) : null;
+    return location != null ? _AssetsFolder(this, location) : null;
   }
 
   /// Return `true` if there is an overlay associated with the file at the given
@@ -80,7 +80,7 @@ class OverlayResourceProvider implements ResourceProvider {
   /// modified in the base resource provider.
   void setOverlay(String path,
       {required String content, required int modificationStamp}) {
-    _overlays[path] = _OverlayFileData(content, modificationStamp);
+    _overlays[path] = _AssetsFileData(content, modificationStamp);
   }
 
   /// Copy any overlay for the file at the [oldPath] to be an overlay for the
@@ -124,11 +124,11 @@ class OverlayResourceProvider implements ResourceProvider {
       .where((filePath) => pathContext.isWithin(folderPath, filePath));
 }
 
-/// A file from an [OverlayResourceProvider].
-class _OverlayFile extends _OverlayResource implements File {
+/// A file from an [AssetsResourceProvider].
+class _AssetsFile extends _AssetsResource implements File {
   /// Initialize a newly created file to have the given [provider] and to
   /// correspond to the given [file] from the provider's base resource provider.
-  _OverlayFile(OverlayResourceProvider provider, File file)
+  _AssetsFile(AssetsResourceProvider provider, File file)
       : super(provider, file);
 
   @Deprecated('Use watch() instead')
@@ -165,12 +165,12 @@ class _OverlayFile extends _OverlayResource implements File {
     String newPath = provider.pathContext.join(parentFolder.path, shortName);
     provider._copyOverlay(path, newPath);
     if (_file.exists) {
-      if (parentFolder is _OverlayFolder) {
-        return _OverlayFile(provider, _file.copyTo(parentFolder._folder));
+      if (parentFolder is _AssetsFolder) {
+        return _AssetsFile(provider, _file.copyTo(parentFolder._folder));
       }
-      return _OverlayFile(provider, _file.copyTo(parentFolder));
+      return _AssetsFile(provider, _file.copyTo(parentFolder));
     } else {
-      return _OverlayFile(provider, provider.baseProvider.getFile(newPath));
+      return _AssetsFile(provider, provider.baseProvider.getFile(newPath));
     }
   }
 
@@ -210,7 +210,7 @@ class _OverlayFile extends _OverlayResource implements File {
   File renameSync(String newPath) {
     File newFile = _file.renameSync(newPath);
     provider._moveOverlay(path, newPath);
-    return _OverlayFile(provider, newFile);
+    return _AssetsFile(provider, newFile);
   }
 
   @override
@@ -231,19 +231,19 @@ class _OverlayFile extends _OverlayResource implements File {
 }
 
 /// Overlay data for a file.
-class _OverlayFileData {
+class _AssetsFileData {
   final String content;
   final int modificationStamp;
 
-  _OverlayFileData(this.content, this.modificationStamp);
+  _AssetsFileData(this.content, this.modificationStamp);
 }
 
-/// A folder from an [OverlayResourceProvider].
-class _OverlayFolder extends _OverlayResource implements Folder {
+/// A folder from an [AssetsResourceProvider].
+class _AssetsFolder extends _AssetsResource implements Folder {
   /// Initialize a newly created folder to have the given [provider] and to
   /// correspond to the given [folder] from the provider's base resource
   /// provider.
-  _OverlayFolder(OverlayResourceProvider provider, Folder folder)
+  _AssetsFolder(AssetsResourceProvider provider, Folder folder)
       : super(provider, folder);
 
   @Deprecated('Use watch() instead')
@@ -292,22 +292,22 @@ class _OverlayFolder extends _OverlayResource implements Folder {
 
   @override
   Resource getChild(String relPath) =>
-      _OverlayResource._from(provider, _folder.getChild(relPath));
+      _AssetsResource._from(provider, _folder.getChild(relPath));
 
   @override
   File getChildAssumingFile(String relPath) =>
-      _OverlayFile(provider, _folder.getChildAssumingFile(relPath));
+      _AssetsFile(provider, _folder.getChildAssumingFile(relPath));
 
   @override
   Folder getChildAssumingFolder(String relPath) =>
-      _OverlayFolder(provider, _folder.getChildAssumingFolder(relPath));
+      _AssetsFolder(provider, _folder.getChildAssumingFolder(relPath));
 
   @override
   List<Resource> getChildren() {
     Map<String, Resource> children = {};
     try {
       for (final child in _folder.getChildren()) {
-        children[child.path] = _OverlayResource._from(provider, child);
+        children[child.path] = _AssetsResource._from(provider, child);
       }
     } on FileSystemException {
       // We don't want to throw if we're a folder that only exists in the
@@ -332,10 +332,10 @@ class _OverlayFolder extends _OverlayResource implements Folder {
   ResourceWatcher watch() => _folder.watch();
 }
 
-/// The base class for resources from an [OverlayResourceProvider].
-abstract class _OverlayResource implements Resource {
+/// The base class for resources from an [AssetsResourceProvider].
+abstract class _AssetsResource implements Resource {
   @override
-  final OverlayResourceProvider provider;
+  final AssetsResourceProvider provider;
 
   /// The resource from the provider's base provider that corresponds to this
   /// resource.
@@ -344,16 +344,16 @@ abstract class _OverlayResource implements Resource {
   /// Initialize a newly created instance of a resource to have the given
   /// [provider] and to represent the [_resource] from the provider's base
   /// resource provider.
-  _OverlayResource(this.provider, this._resource);
+  _AssetsResource(this.provider, this._resource);
 
   /// Return an instance of the subclass of this class corresponding to the
   /// given [resource] that is associated with the given [provider].
-  factory _OverlayResource._from(
-      OverlayResourceProvider provider, Resource resource) {
+  factory _AssetsResource._from(
+      AssetsResourceProvider provider, Resource resource) {
     if (resource is Folder) {
-      return _OverlayFolder(provider, resource);
+      return _AssetsFolder(provider, resource);
     } else if (resource is File) {
-      return _OverlayFile(provider, resource);
+      return _AssetsFile(provider, resource);
     }
     throw ArgumentError('Unknown resource type: ${resource.runtimeType}');
   }
@@ -364,7 +364,7 @@ abstract class _OverlayResource implements Resource {
   @override
   Folder get parent {
     var parent = _resource.parent;
-    return _OverlayFolder(provider, parent);
+    return _AssetsFolder(provider, parent);
   }
 
   @override
@@ -381,7 +381,7 @@ abstract class _OverlayResource implements Resource {
     if (runtimeType != other.runtimeType) {
       return false;
     }
-    return path == (other as _OverlayResource).path;
+    return path == (other as _AssetsResource).path;
   }
 
   @override
@@ -398,7 +398,7 @@ abstract class _OverlayResource implements Resource {
   Resource resolveSymbolicLinksSync() {
     try {
       var resolved = _resource.resolveSymbolicLinksSync();
-      return _OverlayResource._from(provider, resolved);
+      return _AssetsResource._from(provider, resolved);
     } catch (_) {
       if (provider.hasOverlay(path) || provider._hasOverlayIn(path)) {
         return this;
