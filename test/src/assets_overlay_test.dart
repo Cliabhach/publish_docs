@@ -19,7 +19,16 @@ void main() {
     test('can find basic file', () {
       final test1Path = path.absolute(testResourcePath, 'test1');
       final testFolder = provider.getFolder(test1Path);
+      // Make sure that our preparation is all right.
       expect(testFolder.exists, isTrue);
+
+      // ...now look for 'child.txt' and 'not-here.txt'
+      final parentPath = path.absolute(test1Path, 'parent');
+      final parentFolder = provider.getFolder(parentPath);
+      final childResource = parentFolder.getChild('child.txt');
+      final notHereResource = parentFolder.getChild('not-here.txt');
+      expect(childResource.exists, isTrue);
+      expect(notHereResource.exists, isFalse);
     });
   });
 }
