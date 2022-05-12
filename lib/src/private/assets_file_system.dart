@@ -1,6 +1,15 @@
 // Copyright (c) 2018, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+//
+// File modifications for Monstarlab copyright (c) 2022, Philip Cohn-Cort
+// Source was analyzer-4.0.0, path `/lib/file_system/overlay_file_system.dart`
+
+// Disable all of the very_good lint checks, since
+// ignore_for_file: implementation_imports, join_return_with_assignment,
+// ignore_for_file: lines_longer_than_80_chars, omit_local_variable_types,
+// ignore_for_file: prefer_final_locals, sort_constructors_first,
+// ignore_for_file: parameter_assignments, prefer_final_in_for_each,
 
 import 'dart:convert';
 import 'dart:typed_data';
