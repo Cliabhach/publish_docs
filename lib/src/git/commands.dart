@@ -36,6 +36,18 @@ abstract class GitCommands {
   /// Inverse: [reset] (with the 'hard' flag)
   Future<void> commit(String message);
 
+  /// Retrieve the git history from the current **HEAD**.
+  ///
+  /// This is the same sort of output you see when running `git log`, but with
+  /// much fewer details. The first String is the SHA-1 hash of the **HEAD**
+  /// commit, the second is the SHA-1 hash of the parent commit of that
+  /// **HEAD**, the third is the SHA-1 hash of the parent of the second commit,
+  /// and so on up until the root commit.
+  ///
+  /// If there are multiple parents for one commit in the sequence...that's
+  /// probably fine.
+  Future<Iterable<String>> get commits;
+
   /// Create one or more patches that can be used later to recreate commits.
   ///
   /// This is the recommended way to copy commits from one repository history
