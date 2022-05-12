@@ -6,6 +6,13 @@ publish_to: none
 environment:
   sdk: ">=2.16.0 <3.0.0"
 
+dependencies:
+  dartdoc:
+    git:
+      url: https://github.com/Cliabhach/dartdoc.git
+      ref: model-element-fixes
+  git: 2.0.0
+
 dev_dependencies:
   coverage: ^1.1.0
   mocktail: ^0.2.0
