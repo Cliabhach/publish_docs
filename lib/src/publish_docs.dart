@@ -13,6 +13,7 @@ import 'package:git/git.dart';
 import 'package:path/path.dart' as Path;
 
 import 'package:publish_docs/publish_docs.dart';
+import 'package:publish_docs/src/operation/operation.dart';
 import 'package:publish_docs/src/util/util.dart';
 
 /// {@template publish_docs}
