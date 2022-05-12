@@ -1,6 +1,6 @@
 name: publish_docs
 description: Publish your documentation to GitHub Pages!
-version: 0.1.2+9
+version: 0.1.3+10
 publish_to: none
 
 environment:
