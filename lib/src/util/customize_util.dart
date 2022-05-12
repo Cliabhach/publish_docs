@@ -38,7 +38,7 @@ Future<String> obtainDocsVersion(GitDir forGit) async {
 /// See also [obtainDartdoc] and [addAssets].
 Future<DartdocOptionContext> generateAndWaitForDocs(
     List<String> arguments) async {
-  final metaProvider = overlayPackageMetaProvider;
+  final metaProvider = await overlayPackageMetaProvider();
   final dartdoc = await getDartdocWithAssets(metaProvider, arguments);
   if (dartdoc != null) {
     final docCompleter = Completer<DartdocOptionContext>();

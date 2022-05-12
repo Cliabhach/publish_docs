@@ -11,17 +11,24 @@ import 'package:dartdoc/dartdoc.dart';
 import 'package:path/path.dart' as path;
 
 /// A modified copy of [pubPackageMetaProvider].
-final PackageMetaProvider overlayPackageMetaProvider = PackageMetaProvider(
-    PubPackageMeta.fromElement,
-    PubPackageMeta.fromFilename,
-    PubPackageMeta.fromDir,
-    obtainAssetsOverlayProvider(),
-    PhysicalResourceProvider.INSTANCE
+Future<PackageMetaProvider> overlayPackageMetaProvider() async {
+
+  final provider = obtainAssetsOverlayProvider();
+
+  final sdkDir = PhysicalResourceProvider.INSTANCE
         .getFile(PhysicalResourceProvider.INSTANCE.pathContext
             .absolute(Platform.resolvedExecutable))
         .parent
-        .parent,
+        .parent;
+
+  return PackageMetaProvider(
+    PubPackageMeta.fromElement,
+    PubPackageMeta.fromFilename,
+    PubPackageMeta.fromDir,
+    provider,
+    sdkDir,
     messageForMissingPackageMeta: messageForMissingMeta);
+}
 
 /// A custom [ResourceProvider] that provides assets with a sort of 'fallback'.
 ///
