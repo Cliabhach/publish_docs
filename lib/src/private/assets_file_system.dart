@@ -76,11 +76,11 @@ class AssetsResourceProvider implements ResourceProvider {
   }
 
   /// Overlay the content of the file at the given [path]. The file will appear
-  /// to have the given [content] and [modificationStamp] even if the file is
+  /// to have the given [bytes] and [modificationStamp] even if the file is
   /// modified in the base resource provider.
   void setOverlay(String path,
-      {required String content, required int modificationStamp}) {
-    _overlays[path] = _AssetsFileData(content, modificationStamp);
+      {required Uint8List bytes, required int modificationStamp}) {
+    _overlays[path] = _AssetsFileData(bytes, modificationStamp);
   }
 
   /// Copy any overlay for the file at the [oldPath] to be an overlay for the
@@ -94,8 +94,8 @@ class AssetsResourceProvider implements ResourceProvider {
 
   /// Return the content of the overlay of the file at the given [path], or
   /// `null` if there is no overlay for the specified file.
-  String? _getOverlayContent(String path) {
-    return _overlays[path]?.content;
+  Uint8List? _getOverlayBytes(String path) {
+    return _overlays[path]?.bytes;
   }
 
   /// Return the modification stamp of the overlay of the file at the given
@@ -140,7 +140,7 @@ class _AssetsFile extends _AssetsResource implements File {
 
   @override
   int get lengthSync {
-    String? content = provider._getOverlayContent(path);
+    Uint8List? content = provider._getOverlayBytes(path);
     if (content != null) {
       return content.length;
     }
@@ -190,18 +190,18 @@ class _AssetsFile extends _AssetsResource implements File {
 
   @override
   Uint8List readAsBytesSync() {
-    String? content = provider._getOverlayContent(path);
-    if (content != null) {
-      return utf8.encode(content) as Uint8List;
+    Uint8List? bytes = provider._getOverlayBytes(path);
+    if (bytes != null) {
+      return bytes;
     }
     return _file.readAsBytesSync();
   }
 
   @override
   String readAsStringSync() {
-    String? content = provider._getOverlayContent(path);
-    if (content != null) {
-      return content;
+    Uint8List? bytes = provider._getOverlayBytes(path);
+    if (bytes != null) {
+      return utf8.decode(bytes);
     }
     return _file.readAsStringSync();
   }
@@ -232,10 +232,10 @@ class _AssetsFile extends _AssetsResource implements File {
 
 /// Overlay data for a file.
 class _AssetsFileData {
-  final String content;
+  final Uint8List bytes;
   final int modificationStamp;
 
-  _AssetsFileData(this.content, this.modificationStamp);
+  _AssetsFileData(this.bytes, this.modificationStamp);
 }
 
 /// A folder from an [AssetsResourceProvider].
