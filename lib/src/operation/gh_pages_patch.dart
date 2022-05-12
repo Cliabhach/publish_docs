@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:git/git.dart';
+import 'package:publish_docs/src/git/commands.dart';
 
 import 'package:publish_docs/src/operation/docs_bridge.dart';
 import 'package:publish_docs/src/util/doc_util.dart';
@@ -19,10 +20,10 @@ void logStatus(String message) {
 /// Create a patch-file with updates to published documentation.
 ///
 /// Make sure [outputDirectory] points to the directory where only generated
-/// documentation files are located - the [generateAndWaitForDocs] call is allowed to
-/// overwrite anything in there.
-Future<String> generateDocsPatch(GitDir gitDir, Directory outputDirectory,
-    List<String> arguments, BranchReference startingBranchRef) async {
+/// documentation files are located - the [generateAndWaitForDocs] call is
+/// allowed to overwrite anything in there.
+Future<String> generateDocsPatch(GitCommands gitDir, Directory outputDirectory,
+    List<String> arguments, String startingBranchRef) async {
   // Task 1: Pull version number
   final versionString = await obtainDocsVersion(gitDir).then((s) => s.trim());
   logStatus('(updating GitHub Pages for version $versionString)');
@@ -52,12 +53,12 @@ Future<String> generateDocsPatch(GitDir gitDir, Directory outputDirectory,
 
 /// Switch some paths to match the 'gh-pages' branch.
 ///
-/// Basically just a wrapper around [GitDirExtension.checkoutBranch]. If [paths]
-/// is empty (as it is by default), we'll just checkout all files.
-Future<ProcessResult> checkoutGitHubBranch(GitDir forGit,
-    {List<String> paths = const []}) {
-  const gitHubPages = 'gh-pages';
-  final branchRefFuture = forGit.branchReference(gitHubPages);
+/// Basically just a wrapper around [GitCommandsExtension.checkoutBranch]. If
+/// [paths] is empty (as it is by default), we'll just checkout all files.
+Future<void> checkoutGitHubBranch(GitCommands git,
+    {List<String> paths = const []}) async {
 
-  return forGit.checkoutBranch(gitHubPages, branchRefFuture, paths: paths);
+  final branchRef = await git.branchSha(name: 'gh-pages');
+
+  return git.checkoutBranch(branchRef, paths: paths);
 }
