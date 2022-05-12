@@ -12,6 +12,8 @@ import 'package:publish_docs/src/private/mime_type.dart';
 
 /// A custom [ResourceProvider] that provides assets with a 'fallback'.
 ///
+/// ## How it works
+///
 /// _This provider will operate relative to the paths you pass in. To make it
 /// easier to describe how it works, we use '$YOUR-PACKAGE' to mean
 /// the full absolute path to the directory where your `pubspec.yaml` is
@@ -42,7 +44,7 @@ import 'package:publish_docs/src/private/mime_type.dart';
 /// 4. We check for and return that file if it exists.
 /// 5. If _that_ doesn't exist, then we error out.
 ///
-Future<ResourceProvider> obtainOverlayProvider(
+Future<ResourceProvider> obtainAssetsProvider(
     {String pathForLayers = '', List<String> layers = const []}) async {
   final base = PhysicalResourceProvider.INSTANCE;
   final overlay = OverlayResourceProvider(base);

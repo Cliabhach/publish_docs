@@ -16,7 +16,7 @@ Future<PackageMetaProvider> obtainPackageMetaProvider() async {
 
   final assetsAbsolutePath = absolutePath('doc', 'assets');
 
-  final provider = await obtainOverlayProvider(
+  final provider = await obtainAssetsProvider(
       pathForLayers: assetsAbsolutePath,
       layers: [
         assetsAbsolutePath // First entry in this array should always be this
