@@ -105,7 +105,7 @@ might even have one of these defined in your repository.
 3. Custom runtime resources. This is _very_ new, and the main reason
 why we require such a recent version of the `dartdoc` library.
 
-For the most part, you can think of the `generateDocs` command as a
+For the most part, you can think of the `:generate` command as a
 drop-in replacement for `dart doc`. With no additional configuration,
 you'll get the same documentation output you've come to expect, along
 with our replacement for the default `dartdoc` assets.
@@ -158,18 +158,40 @@ dart pub run publish_docs
 flutter pub run publish_docs
 ```
 
-### Customization
+### Customisation
+
+#### Basics
 
 By default, we make use of the following 4 directories:
 
-`doc/api/` - the default output directory for `generateDocs`.
+`doc/api/` - the default output directory for `:generate`.
 
 `doc/assets/` - the default directory for runtime resources.
 
-`docs/api/` - the default output directory for `updateGitHubDocs`.
+`docs/api/` - the default output directory for `:commit`.
 
 You can change the appearance and behavior of the generated docs by
-adding any of the currently-supported files to `doc/assets/`.
+adding any of the currently-supported files to `doc/assets/`. We will
+automatically use our [bundled resources](lib/resources/dartdoc-5.1.0)
+to add any important files that you didn't provide there.
+
+#### Supported files
+
+_As seen in [the generated list][dartdoc_asset_list]._
+
+- `docs.dart.js`
+- `docs.dart.js.map`
+- `favicon.png`
+- `github.css`
+- `highlight.pack.js`
+- `play_button.svg`
+- `readme.md`
+- `styles.css`
+
+Note that this list is subject to change in future releases of the
+`dartdoc` library. Until the `dartdoc` library API stabilises, you
+should pay careful attention the exact version of `publish_docs` you
+use.
 
 ## Limitations
 
@@ -225,6 +247,7 @@ We provide a value of `doc/assets/` for that.
 [dartdoc_library]: https://pub.dev/documentation/dartdoc/5.0.1/dartdoc/dartdoc-library.html
 [dartdoc_pub_meta]: https://pub.dev/documentation/dartdoc/5.0.1/dartdoc/PackageMeta-class.html
 [dartdoc_2934]: https://github.com/dart-lang/dartdoc/issues/2934
+[dartdoc_asset_list]: https://github.com/dart-lang/dartdoc/blob/26d38618/lib/src/generator/html_resources.g.dart
 [doxygen_diagrams]: https://www.doxygen.nl/manual/diagrams.html
 [git_commands_class]: lib/src/git/commands.dart
 [pages_patch_file]: lib/src/operation/gh_pages_patch.dart
