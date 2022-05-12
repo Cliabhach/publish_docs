@@ -16,10 +16,13 @@ import 'package:publish_docs/src/private/mime_type.dart';
 /// A modified copy of [pubPackageMetaProvider].
 Future<PackageMetaProvider> overlayPackageMetaProvider() async {
 
+  final assetsAbsolutePath = absolutePath('doc', 'assets');
+
   final provider = obtainAssetsOverlayProvider(
-      pathForLayers: absolutePath('doc', 'assets'),
-      layers: await _publishDocsResourceLayers() + [
-      ]
+      pathForLayers: assetsAbsolutePath,
+      layers: [
+        assetsAbsolutePath // First entry in this array should always be this directory
+      ] + await _publishDocsResourceLayers() // Ordered by decreasing importance
     );
 
   final sdkDir = PhysicalResourceProvider.INSTANCE
