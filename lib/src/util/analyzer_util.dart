@@ -98,19 +98,30 @@ fs.ResourceProvider obtainAssetsOverlayProvider(
   return overlay;
 }
 
-void _registerElement(fs.Resource element, String pathForLayers,
-    OverlayResourceProvider overlay, String layer,) {
+Future<void> _registerElement(fs.Resource element, String pathForLayers,
+    OverlayResourceProvider overlay, String layer,) async {
   final filename = path.basename(element.path);
   final pathForCaller = path.absolute(pathForLayers, filename);
 
   if (overlay.hasOverlay(pathForCaller)) {
     // Already found in a prior layer; we can go on to the next element.
   } else if (element is fs.File) {
-    overlay.setOverlay(
-        pathForCaller,
-        content: element.readAsStringSync(),
-        modificationStamp: element.modificationStamp,
-    );
+
+    final mimeType = await _queryMimeType(element);
+
+    if (mimeType == null) {
+      // Can't figure out what kind of file $filename is. Skip it.
+    } else {
+      if (mimeType.startsWith('image') && !mimeType.contains('xml')) {
+        // It's a binary image. Dart overlays don't support that.
+      } else {
+        overlay.setOverlay(
+          pathForCaller,
+          content: element.readAsStringSync(),
+          modificationStamp: element.modificationStamp,
+        );
+      }
+    }
   } else {
     print('Ignoring detected Resource "$filename" in $layer.');
   }
@@ -144,7 +155,7 @@ Future<String?> _queryMimeType(fs.File file) async {
     // 'xdg-mime' was unavailable or could not identify the file
     final normalFile = io.File(file.path);
     final firstFewBytes = await normalFile
-        .openRead(0, 20)
+        .openRead(0, 12) // No need to read more bytes. Library only checks 12.
         .reduce((previous, element) => previous + element);
 
     final type = lookupMimeType(file.path, headerBytes: firstFewBytes);
