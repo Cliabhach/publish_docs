@@ -7,10 +7,10 @@ import 'package:dartdoc/dartdoc.dart';
 import 'package:dartdoc/options.dart';
 import 'package:git/git.dart';
 
-import 'package:publish_docs/src/private/assets_layers.dart';
 import 'package:publish_docs/src/operation/assets_meta_provider.dart';
 import 'package:publish_docs/src/util/doc_util.dart';
 import 'package:publish_docs/src/util/git_util.dart';
+import 'package:publish_docs/src/util/path_util.dart';
 
 /// Figure out what version of documentation we have here.
 ///

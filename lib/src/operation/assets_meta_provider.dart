@@ -10,6 +10,7 @@ import 'package:dartdoc/dartdoc.dart';
 
 import 'package:publish_docs/src/private/assets_layers.dart';
 import 'package:publish_docs/src/private/assets_resource_provider.dart';
+import 'package:publish_docs/src/util/path_util.dart';
 
 /// A modified copy of [pubPackageMetaProvider].
 Future<PackageMetaProvider> obtainPackageMetaProvider() async {

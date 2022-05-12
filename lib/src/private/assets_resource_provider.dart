@@ -7,8 +7,8 @@ import 'package:analyzer/file_system/overlay_file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:path/path.dart' as path;
 
-import 'package:publish_docs/src/private/assets_layers.dart';
 import 'package:publish_docs/src/private/mime_type.dart';
+import 'package:publish_docs/src/util/path_util.dart';
 
 /// A custom [ResourceProvider] that provides assets with a 'fallback'.
 ///
