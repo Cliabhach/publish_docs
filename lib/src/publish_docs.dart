@@ -13,6 +13,7 @@ import 'package:git/git.dart';
 import 'package:path/path.dart' as Path;
 
 import 'package:publish_docs/publish_docs.dart';
+import 'package:publish_docs/src/git/dir_commands.dart';
 import 'package:publish_docs/src/operation/operation.dart';
 import 'package:publish_docs/src/util/util.dart';
 
@@ -46,13 +47,18 @@ Future<void> generateDocs(List<String> arguments) async {
 /// well-defined Git Directory, and then starts [updateGitHubPages]
 /// asynchronously. Check out the docs on that function for more details on
 /// exactly what happens.
+///
+/// We currently use a [GitDir]-backed [GitDirCommands] object to perform those
+/// operations.
 Future<void> updateGitHubDocs(List<String> arguments) {
   final currentPath = Path.current;
 
   return GitDir.isGitDir(currentPath).then((isGitDirectory) {
     if (isGitDirectory) {
-      GitDir.fromExisting(currentPath)
-          .then((gitDir) async => updateGitHubPages(gitDir, arguments));
+      GitDir.fromExisting(currentPath).then((gitDir) async {
+        final git = GitDirCommands(gitDir);
+        return updateGitHubPages(git, arguments);
+      });
     }
   });
 }
