@@ -1,10 +1,19 @@
 name: publish_docs
-description: Publish your documentation to GitHub Pages!
+description: Publish your documentation to a GitHub Pages branch!
+repository: https://github.com/Cliabhach/publish_docs/
 version: 0.2.1+14
 publish_to: none
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
+
+executables:
+  # General-purpose 'info' script
+  publish_docs:
+  # Generate new docs locally in doc/api/
+  docs_generate: generate
+  # Create a commit on the GitHub Pages branch
+  docs_commit: commit
 
 dependencies:
   analyzer: ^3.4.1
