@@ -61,17 +61,33 @@ void main() {
     test('can find overlay file', () {
       final test2Path = path.absolute(testResourcePath, 'test2');
 
+      final noFilesPath = path.absolute(test2Path, 'no-files');
+      final oneFilePath = path.absolute(test2Path, 'one-file');
+      final otherFilesPath = path.absolute(test2Path, 'other-files');
+
       final parentPath = path.absolute(test2Path, 'parent');
 
-      // TODO(Cliabhach): Create a provider with built-in directory overlays
+      provider = obtainAssetsOverlayProvider(
+        pathForLayers: parentPath,
+        layers: [
+          noFilesPath,
+          oneFilePath,
+          otherFilesPath,
+      ],);
 
-      final childResource = relative(provider, parentPath, 'child.txt');
       final notHereResource = relative(provider, parentPath, 'not-here.txt');
-      final sampleResource = relative(provider, parentPath, 'sampleB');
+      final sampleResourceA = relative(provider, parentPath, 'sampleA');
+      final sampleResourceB = relative(provider, parentPath, 'sampleB');
 
-      expect(childResource.exists, isTrue);
+      expect(sampleResourceA.exists, isTrue);
       expect(notHereResource.exists, isFalse);
-      expect(sampleResource.exists, isTrue);
+      expect(sampleResourceB.exists, isTrue);
+
+      // check the contents of sampleA - the version from 'one-file' should be
+      // returned here
+      expect(sampleResourceA, isA<File>());
+      final sampleContents = (sampleResourceA as File).readAsStringSync();
+      expect(sampleContents, 'A');
     });
   });
 }
