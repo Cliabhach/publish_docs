@@ -12,6 +12,8 @@ import 'package:dartdoc/dartdoc.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path;
 
+import 'package:publish_docs/src/util/binary_code_page.dart';
+
 /// A modified copy of [pubPackageMetaProvider].
 Future<PackageMetaProvider> overlayPackageMetaProvider() async {
 
@@ -113,7 +115,14 @@ Future<void> _registerElement(fs.Resource element, String pathForLayers,
       // Can't figure out what kind of file $filename is. Skip it.
     } else {
       if (mimeType.startsWith('image') && !mimeType.contains('xml')) {
-        // It's a binary image. Dart overlays don't support that.
+        // It's a binary file. We need to use a custom encoding here.
+        final normalFile = io.File(element.path);
+        final contents = normalFile.readAsStringSync(encoding: binaryEncoding);
+        overlay.setOverlay(
+          pathForCaller,
+          content: contents,
+          modificationStamp: element.modificationStamp
+        );
       } else {
         overlay.setOverlay(
           pathForCaller,
