@@ -5,7 +5,7 @@ import 'package:analyzer/file_system/file_system.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
-import 'package:publish_docs/src/util/analyzer_util.dart';
+import 'package:publish_docs/src/private/assets_resource_provider.dart';
 
 import 'test_util.dart';
 
