@@ -31,8 +31,13 @@ class GitDirCommands extends GitCommands {
   }
 
   @override
-  Future<String> branchSha(String? name) {
-    if (name == null) {
+  Future<String> branchName() {
+    return gitDir.currentBranch().then((ref) => ref.branchName);
+  }
+
+  @override
+  Future<String> branchSha({String name = 'HEAD'}) {
+    if (name == 'HEAD') {
       return gitDir.currentBranch().then((ref) => ref.sha);
     } else {
       return gitDir.branchReference(name).then((ref) {
