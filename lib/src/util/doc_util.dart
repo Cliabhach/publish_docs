@@ -3,8 +3,32 @@
 
 import 'dart:io';
 
+import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:dartdoc/dartdoc.dart';
 import 'package:dartdoc/options.dart';
+
+/// A modified copy of [pubPackageMetaProvider].
+final PackageMetaProvider overlayPackageMetaProvider = PackageMetaProvider(
+    PubPackageMeta.fromElement,
+    PubPackageMeta.fromFilename,
+    PubPackageMeta.fromDir,
+    PhysicalResourceProvider.INSTANCE,
+    PhysicalResourceProvider.INSTANCE
+        .getFile(PhysicalResourceProvider.INSTANCE.pathContext
+            .absolute(Platform.resolvedExecutable))
+        .parent
+        .parent,
+    messageForMissingPackageMeta: messageForMissingMeta);
+
+/// A modified copy of [PubPackageMeta.messageForMissingPackageMeta].
+String messageForMissingMeta(LibraryElement library, DartdocOptionContext context) {
+  final libraryString = library.librarySource.fullName;
+  final dartOrFlutter = context.flutterRoot == null ? 'dart' : 'flutter';
+  return 'Unknown package for library: $libraryString.  Consider `$dartOrFlutter pub get` and/or '
+      '`$dartOrFlutter pub global deactivate dartdoc` followed by `$dartOrFlutter pub global activate dartdoc` to fix. '
+      'Also, be sure that `$dartOrFlutter analyze` completes without errors.';
+}
 
 /// Create a new [Dartdoc] object from the given config.
 ///
