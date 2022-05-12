@@ -10,7 +10,7 @@ import 'package:git/git.dart';
 /// See also [this rev-parse overview](https://git-scm.com/docs/git-rev-parse).
 Future<String> obtainGitVersion(GitDir forGit) async {
   final args = ['rev-parse', '--short', '--verify', 'HEAD'];
-  return await forGit.runCommand(args).then((process) {
+  return forGit.runCommand(args).then((process) {
     return process.stdout as String;
   });
 }
@@ -33,7 +33,7 @@ Future<String> patchOutOfGitDiff(GitDir forGit, String path, String message) {
     // Create temporary commit (2) with new docs
     return forGit.runCommand(['commit', '-m', message]);
   }).then((commitResult) async {
-    return await doFormatPatch(forGit);
+    return doFormatPatch(forGit);
   }).then((formatPatchResult) {
     // Return the patch's filename
     return formatPatchResult.stdout as String;
