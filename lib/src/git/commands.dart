@@ -49,7 +49,7 @@ abstract class GitCommands {
   /// This is sort of a utility method, that can check whether certain things
   /// are true about this repository. We use it mainly to translate between
   /// 'refs' (like **HEAD** or `origin/main`) and commit hashes.
-  Future<void> revParse(Iterable<String> args);
+  Future<String> revParse(Iterable<String> args);
 
   /// Remove one or more files from the git staging index.
   ///
