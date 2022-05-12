@@ -5,6 +5,16 @@
 /// There is one implementation in `GitDirCommands`.
 abstract class GitCommands {
 
+  /// Create a new [GitCommands] abstraction.
+  ///
+  /// The 'path' property must be defined at this point.
+  GitCommands(this.path);
+
+  /// Return an absolute path to the root of this git repository.
+  ///
+  /// Implementors must provide this to the constructor.
+  final String path;
+
   /// Add the content of one or more files to the git staging index.
   ///
   /// The `.git` directory contains references to every file in every commit.

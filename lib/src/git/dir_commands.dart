@@ -9,13 +9,13 @@ import 'package:publish_docs/src/git/commands.dart';
 ///
 /// Where a function does not exist on the [GitDir] class, we try to recreate
 /// that function with [GitDir.runCommand].
-class GitDirCommands implements GitCommands {
+class GitDirCommands extends GitCommands {
   /// Public constructor for [GitDirCommands].
   ///
   /// Use one of these to do git-related stuff to a specific directory - all
   /// sorts of commands are on offer, from [add] and [commit] to [am] and
   /// [revParse].
-  GitDirCommands(this.gitDir);
+  GitDirCommands(this.gitDir) : super(gitDir.path);
 
   /// The underlying [GitDir] - this is what actually executes the commands.
   GitDir gitDir;
