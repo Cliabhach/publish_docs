@@ -15,16 +15,21 @@ void main() {
     setUp(() {
       testResourcePath = resourcePath('overlay');
     });
-    test('can find basic file', () {
+    test('can retrieve physical files', () {
       provider = obtainAssetsOverlayProvider();
 
       final test1Path = path.absolute(testResourcePath, 'test1');
       final testFolder = provider.getFolder(test1Path);
       // Make sure that our preparation is all right.
       expect(testFolder.exists, isTrue);
+    });
+    test('can find basic file', () {
+      final test1Path = path.absolute(testResourcePath, 'test1');
+      final parentPath = path.absolute(test1Path, 'parent');
+
+      provider = obtainAssetsOverlayProvider(pathForLayers: parentPath);
 
       // ...now look for 'child.txt' and 'not-here.txt'
-      final parentPath = path.absolute(test1Path, 'parent');
       final parentFolder = provider.getFolder(parentPath);
       final childResource = parentFolder.getChild('child.txt');
       final notHereResource = parentFolder.getChild('not-here.txt');
