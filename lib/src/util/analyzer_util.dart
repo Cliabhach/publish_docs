@@ -19,8 +19,7 @@ Future<PackageMetaProvider> overlayPackageMetaProvider() async {
 
   final provider = obtainAssetsOverlayProvider(
       pathForLayers: path.absolute('doc', 'assets'),
-      layers: [
-        await _publishDocsResourceLayer()
+      layers: await _publishDocsResourceLayers() + [
       ]
     );
 
@@ -42,9 +41,11 @@ Future<PackageMetaProvider> overlayPackageMetaProvider() async {
 /// Method inspired by some of the private 'ResourceLoader' code in `dartdoc`.
 ///
 /// Delegates some of the work to [_uriAsPath].
-Future<String> _publishDocsResourceLayer() async {
+Future<List<String>> _publishDocsResourceLayers() async {
   final provider = PhysicalResourceProvider.INSTANCE;
-  return _uriAsPath('package:publish_docs/resources', provider);
+  const ourPackage = 'package:publish_docs';
+  final base = _uriAsPath('$ourPackage/resources', provider);
+  return [ await base ];
 }
 
 /// Find the [fs.Folder] on disk that represents a given `package:` [uri].
