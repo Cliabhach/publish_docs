@@ -51,8 +51,6 @@ Future<void> updateGitHubDocs(List<String> arguments) {
 
   return GitDir.isGitDir(currentPath).then((isGitDirectory) {
     if (isGitDirectory) {
-      final binDirectory = Directory(Path.absolute('doc', 'bin'));
-      sanityCheck(binDirectory);
       GitDir.fromExisting(currentPath)
           .then((gitDir) async => await updateGitHubPages(gitDir, arguments));
     }
