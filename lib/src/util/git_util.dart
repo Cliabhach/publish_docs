@@ -3,7 +3,6 @@
 
 import 'package:git/git.dart';
 import 'package:publish_docs/src/git/commands.dart';
-import 'package:publish_docs/src/git/dir_commands.dart';
 
 /// Retrieve the git short hash for the currently-checked-out commit.
 ///
@@ -32,18 +31,20 @@ Future<String> patchOutOfGitDiff(
     return forGit.commit(message);
   }).then((commitResult) async {
     // Return the patch's filename
-    return doFormatPatch(forGit as GitDirCommands);
+    return doFormatPatch(forGit);
   });
 }
 
-Future<String> doFormatPatch(GitDirCommands forGit) async {
-  final commitList = await forGit.gitDir.commits();
-  final newDocsCommit = commitList.entries.first;
-  final oldDocsCommit = commitList.entries.skip(1).first;
+/// Create a new patch file to represent the contents of the **HEAD** commit.
+///
+/// In order to do that, we have to pass the first two [GitCommands.commits]
+/// to [GitCommands.formatPatch].
+Future<String> doFormatPatch(GitCommands git) async {
+  final commitList = await git.commits;
+  final newDocsCommit = commitList.first;
+  final oldDocsCommit = commitList.skip(1).first;
   // Format the difference between these two commits into a patch
-  final sha1 = oldDocsCommit.key;
-  final sha2 = newDocsCommit.key;
-  return forGit.formatPatch(sha1, sha2);
+  return git.formatPatch(oldDocsCommit, newDocsCommit);
 }
 
 /// A basic extension for [GitDir] with branch and reset capabilities.
