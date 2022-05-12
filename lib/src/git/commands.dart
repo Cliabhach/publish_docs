@@ -11,7 +11,7 @@ abstract class GitCommands {
   /// file to the staging index with this command.
   ///
   /// Inverse: [reset]
-  void add();
+  Future<void> add(String path);
 
   /// Apply a git patch to the git staging index, and then commit that patch.
   ///
@@ -19,13 +19,13 @@ abstract class GitCommands {
   /// commits from one repository history to another.
   ///
   /// To be used along-side [formatPatch].
-  void am();
+  Future<void> am(String patchFilePath);
 
   /// Change the contents of one or more files to match those in a given commit.
   ///
   /// By itself this command does not modify the git staging index. To remove
   /// files from _that_, use [reset].
-  void checkout();
+  Future<void> checkout(String gitRef, {List<String> paths = const []});
 
   /// Record the git staging index in the regular git index.
   ///
@@ -33,7 +33,7 @@ abstract class GitCommands {
   /// in-progress work.
   ///
   /// Inverse: [reset] (with the 'hard' flag)
-  void commit();
+  Future<void> commit(String message);
 
   /// Create one or more patches that can be used later to recreate commits.
   ///
@@ -41,21 +41,21 @@ abstract class GitCommands {
   /// to another repository history.
   ///
   /// To be used along-side [am].
-  void formatPatch();
+  Future<String> formatPatch(String gitStartRef, String gitEndRef);
 
   /// Get basic information from a git repository.
   ///
   /// This is sort of a utility method, that can check whether certain things
   /// are true about this repository. We use it mainly to translate between
-  /// 'refs' (like **HEAD** or 'main') and commit hashes.
-  void revParse();
+  /// 'refs' (like **HEAD** or `origin/main`) and commit hashes.
+  Future<void> revParse(Iterable<String> args);
 
   /// Remove one or more files from the git staging index.
   ///
   /// Pass along the 'hard' flag to remove commits from the regular git index.
   ///
   /// Inverse: [add]
-  void reset();
+  Future<void> reset(String gitRef, {bool hard});
 
   /// Create or remove a 'stash' commit.
   ///
@@ -66,5 +66,5 @@ abstract class GitCommands {
   /// someone else's work aside while you get your own work done.
   ///
   /// Inverse: [stash] (with the 'pop' flag)
-  void stash();
+  Future<void> stash();
 }
