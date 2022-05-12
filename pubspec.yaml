@@ -1,7 +1,7 @@
 name: publish_docs
 description: Publish your documentation to a GitHub Pages branch!
 repository: https://github.com/Cliabhach/publish_docs/
-version: 0.2.1+14
+version: 0.2.2+15
 publish_to: none
 
 environment:
