@@ -64,7 +64,8 @@ of why they're in this project:
 
 In addition to the above, we do use some functions exposed by the
 library itself. For example, `GitDir.commits` internally invokes
-`git rev-list`. Please refer to the source code itself for a better
+`git rev-list`. Please refer to the source code itself (and the
+[GitCommands class][git_commands_class] in particular) for a better
 understanding of what `git` library functions we call.
 
 #### Can I change the `git` dependency?
@@ -143,7 +144,7 @@ command for your project (probably `dart pub get` or
 `flutter pub get`) to update your project's pubspec.lock.
 
 ...That's basically it. You can now use a `pub run` command to try out
-the tool. We recommend starting off with the `generateDocs` command:
+the tool. We recommend starting off with the `publish_docs` command:
 
 ```shell
 # For Dart projects
@@ -159,9 +160,6 @@ By default, we make use of the following 4 directories:
 `doc/api/` - the default output directory for `generateDocs`.
 
 `doc/assets/` - the default directory for runtime resources.
-
-`doc/bin/` - a small marker directory. If this is missing, the
-`updateGitHubDocs` command will refuse to run.
 
 `docs/api/` - the default output directory for `updateGitHubDocs`.
 
@@ -198,3 +196,4 @@ We provide a value of `doc/assets/` for that.
 [dartdoc_pub_meta]: https://pub.dev/documentation/dartdoc/5.0.1/dartdoc/PackageMeta-class.html
 [dartdoc_2934]: https://github.com/dart-lang/dartdoc/issues/2934
 [doxygen_diagrams]: https://www.doxygen.nl/manual/diagrams.html
+[git_commands_class]: lib/src/git/commands.dart
