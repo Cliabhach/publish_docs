@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 import 'dart:io' as io;
+import 'dart:typed_data';
 
 import 'package:analyzer/file_system/file_system.dart' as fs;
 import 'package:meta/meta.dart';
@@ -24,6 +25,16 @@ class DocsMimeType {
   /// - 'application/json' represents a stream of JSON.
   /// - 'image/png' represents a PNG image.
   String type;
+
+  /// Load the contents of [element] into a [Uint8List].
+  ///
+  /// Unlike [readAsStringSync], this method doesn't need any custom behaviour
+  /// to account for binary files.
+  ///
+  /// May throw an exception if something goes wrong during I/O.
+  Uint8List readAsBytesSync(fs.File element) {
+    return element.readAsBytesSync();
+  }
 
   /// Load the contents of [element] into a [String].
   ///
