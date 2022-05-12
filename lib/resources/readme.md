@@ -1,22 +1,18 @@
 # highlight.js
 
-Generated from https://highlightjs.org/download/ on 2021-07-13
+Generated from https://highlightjs.org/download/ on 2022-04-26
 
 **Included languages:**
 
+* .properties
 * bash
-* c  
 * css
 * dart
 * diff
 * html, xml
-* java
-* javascript
 * json
 * kotlin
 * markdown
-* objective-c
 * plaintext  
 * shell
-* swift
 * yaml
