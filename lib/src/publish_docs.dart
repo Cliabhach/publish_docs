@@ -28,7 +28,7 @@ class PublishDocs {
 Future<void> generateDocs(List<String> arguments) async {
   // A provider of metadata. Among other things, this can tell us where the
   // Flutter SDK is installed.
-  final metaProvider = await overlayPackageMetaProvider();
+  final metaProvider = await obtainPackageMetaProvider();
 
   // Parse command-line arguments, load config from the dartdoc_options.yaml,
   // and read in some basic pubspec info for the current app.

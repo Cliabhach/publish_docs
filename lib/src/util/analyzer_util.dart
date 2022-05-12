@@ -15,11 +15,11 @@ import 'package:path/path.dart' as path;
 import 'package:publish_docs/src/private/mime_type.dart';
 
 /// A modified copy of [pubPackageMetaProvider].
-Future<PackageMetaProvider> overlayPackageMetaProvider() async {
+Future<PackageMetaProvider> obtainPackageMetaProvider() async {
 
   final assetsAbsolutePath = absolutePath('doc', 'assets');
 
-  final provider = await obtainAssetsOverlayProvider(
+  final provider = await obtainOverlayProvider(
       pathForLayers: assetsAbsolutePath,
       layers: [
         assetsAbsolutePath // First entry in this array should always be this directory
@@ -106,7 +106,7 @@ String absolutePath(String part1, [String? part2]) {
 /// 4. We check for and return that file if it exists.
 /// 5. If _that_ doesn't exist, then we error out.
 ///
-Future<fs.ResourceProvider> obtainAssetsOverlayProvider(
+Future<fs.ResourceProvider> obtainOverlayProvider(
     {String pathForLayers = '', List<String> layers = const []}) async {
   final base = PhysicalResourceProvider.INSTANCE;
   final overlay = OverlayResourceProvider(base);
