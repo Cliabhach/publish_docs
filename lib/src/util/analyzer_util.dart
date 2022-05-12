@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: BSD-3-Clause
 /// Utility file for working with analyzer and some filesystem concepts.
 
-import 'dart:io';
+import 'dart:io' as io;
 import 'dart:isolate';
 
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/file_system/file_system.dart';
+import 'package:analyzer/file_system/file_system.dart' as fs;
 import 'package:analyzer/file_system/overlay_file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:dartdoc/dartdoc.dart';
@@ -23,7 +23,7 @@ Future<PackageMetaProvider> overlayPackageMetaProvider() async {
 
   final sdkDir = PhysicalResourceProvider.INSTANCE
         .getFile(PhysicalResourceProvider.INSTANCE.pathContext
-            .absolute(Platform.resolvedExecutable))
+            .absolute(io.Platform.resolvedExecutable))
         .parent
         .parent;
 
@@ -51,7 +51,7 @@ Future<String> _publishDocsResourceLayer() async {
   }
 }
 
-/// A custom [ResourceProvider] that provides assets with a sort of 'fallback'.
+/// A custom [fs.ResourceProvider] that provides assets with a 'fallback'.
 ///
 /// _This provider will operate relative to the paths you pass in. To make it
 /// easier to describe how it works, we use '$YOUR-PACKAGE' to mean
@@ -83,7 +83,7 @@ Future<String> _publishDocsResourceLayer() async {
 /// 4. We check for and return that file if it exists.
 /// 5. If _that_ doesn't exist, then we error out.
 ///
-ResourceProvider obtainAssetsOverlayProvider(
+fs.ResourceProvider obtainAssetsOverlayProvider(
     {String pathForLayers = '', List<String> layers = const []}) {
   // TODO(Cliabhach): figure out how to future-proof for varying themes
   final base = PhysicalResourceProvider.INSTANCE;
@@ -97,14 +97,14 @@ ResourceProvider obtainAssetsOverlayProvider(
   return overlay;
 }
 
-void _registerElement(Resource element, String pathForLayers,
+void _registerElement(fs.Resource element, String pathForLayers,
     OverlayResourceProvider overlay, String layer,) {
   final filename = path.basename(element.path);
   final pathForCaller = path.absolute(pathForLayers, filename);
 
   if (overlay.hasOverlay(pathForCaller)) {
     // Already found in a prior layer; we can go on to the next element.
-  } else if (element is File) {
+  } else if (element is fs.File) {
     overlay.setOverlay(
         pathForCaller,
         content: element.readAsStringSync(),
