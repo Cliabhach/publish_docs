@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:analyzer/file_system/file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
@@ -49,4 +50,11 @@ String resourcePath(String testName) {
 /// Wrapper around [ResourceProvider.getResource] and [path.absolute].
 Resource relative(ResourceProvider provider, String parent, String child) {
   return provider.getResource(path.absolute(parent, child));
+}
+
+/// Simple wrapper around an [Answer] that returns a [Future].
+///
+/// For use with Mocktail-based mocking tests.
+Answer<Future<T>> futureAnswer<T>(T Function() computation) {
+  return (invocation) => Future(computation);
 }
