@@ -4,10 +4,10 @@ import 'dart:async';
 import 'dart:io';
 import 'package:git/git.dart';
 
-import 'package:path/path.dart' as Path;
+import 'package:path/path.dart' as path;
 
-import 'util/git_util.dart';
-import 'util/pages_util.dart';
+import 'package:publish_docs/src/util/git_util.dart';
+import 'package:publish_docs/src/util/pages_util.dart';
 
 /// GitHub Pages only knows how to read from two possible locations:
 ///
@@ -41,7 +41,7 @@ Future<void> updateGitHubPages(GitDir gitDir, List<String> arguments) async {
   await gitDir.runCommand(['stash']);
   logStatus('Found the git directory.');
   // Task 1: Define constants for use in this function
-  final outputDirectory = Directory(Path.absolute('docs', 'api'));
+  final outputDirectory = Directory(path.absolute('docs', 'api'));
   final startingBranchRef = await startingBranch;
   // Task 2: Generate a documentation patch
   final patch = await generateDocsPatch(
@@ -52,7 +52,7 @@ Future<void> updateGitHubPages(GitDir gitDir, List<String> arguments) async {
   await gitDir.applyPatch(patch);
   // Task 5: Print instructions
   final indexDocFile =
-      Directory(Path.absolute(outputDirectory.path, 'index.html'));
+      Directory(path.absolute(outputDirectory.path, 'index.html'));
   logStatus('''
   The gh-pages branch has been updated. Please review the files in docs/api/ to
   make sure there aren't any surprises there. We recommend opening the index.html

@@ -13,8 +13,8 @@ import 'package:dartdoc/dartdoc.dart';
 import 'package:git/git.dart';
 import 'package:path/path.dart' as Path;
 
-import '../publish_docs.dart';
-import 'util/util.dart';
+import 'package:publish_docs/publish_docs.dart';
+import 'package:publish_docs/src/util/util.dart';
 
 /// {@template publish_docs}
 /// Publish your documentation to GitHub Pages!

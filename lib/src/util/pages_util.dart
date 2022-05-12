@@ -4,9 +4,9 @@ import 'dart:io';
 
 import 'package:git/git.dart';
 
-import 'customize_util.dart';
-import 'doc_util.dart';
-import 'git_util.dart';
+import 'package:publish_docs/src/util/customize_util.dart';
+import 'package:publish_docs/src/util/doc_util.dart';
+import 'package:publish_docs/src/util/git_util.dart';
 
 /// Add a message to the log.
 ///
