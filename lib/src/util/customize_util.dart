@@ -67,7 +67,7 @@ Future<Dartdoc?> getDartdocWithAssets(
   Dartdoc? dartdoc;
 
   // Request usage of our 'assets' instead of dartdoc's bundled resources.
-  final modifiedArguments = addAssets(metaProvider, arguments);
+  final modifiedArguments = addAssets(arguments);
 
   final config = parseOptions(metaProvider, modifiedArguments);
   if (config == null) {
@@ -84,8 +84,7 @@ Future<Dartdoc?> getDartdocWithAssets(
 /// add it to the arguments list here.
 ///
 /// Use the returned list for a call to [parseOptions].
-List<String> addAssets(
-    PackageMetaProvider metaProvider, List<String> arguments) {
+List<String> addAssets(List<String> arguments,) {
   final assetsAbsolutePath = absolutePath('doc', 'assets');
   final modifiedArguments = arguments + ['--resources-dir', assetsAbsolutePath];
   return modifiedArguments;
