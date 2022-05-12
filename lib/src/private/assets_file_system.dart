@@ -218,7 +218,10 @@ class _AssetsFile extends _AssetsResource implements File {
 
   @override
   void writeAsBytesSync(List<int> bytes) {
-    writeAsStringSync(String.fromCharCodes(bytes));
+    if (provider.hasOverlay(path)) {
+      throw FileSystemException(path, 'Cannot write a file with an overlay');
+    }
+    _file.writeAsBytesSync(bytes);
   }
 
   @override
