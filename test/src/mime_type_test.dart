@@ -1,20 +1,23 @@
 // ignore_for_file: prefer_const_constructors, directives_ordering
-import 'dart:io';
+import 'dart:io' as io;
 
+import 'package:analyzer/file_system/file_system.dart' as fs;
 import 'package:analyzer/file_system/physical_file_system.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:publish_docs/src/private/mime_type.dart';
 import 'package:test/test.dart';
 
-
-
 import 'test_util.dart';
+
+class MockFile extends Mock implements fs.File {
+}
 
 void main() {
   group('mime_type', () {
-    late Directory testResourceDirectory;
+    late io.Directory testResourceDirectory;
 
     setUp(() {
-      testResourceDirectory = Directory(resourcePath('mime_type'));
+      testResourceDirectory = io.Directory(resourcePath('mime_type'));
     });
 
     test('checks may understand LICENSE files', () async {
@@ -50,6 +53,39 @@ void main() {
       expect(libraryType, 'image/png');
       expect(hostType, isNotNull);
       expect(hostType!.trim(), 'image/png');
+    });
+
+    late fs.File file;
+    setUp(() {
+      file = MockFile();
+    });
+
+    test('DocsMimeType understands binary files', () async {
+      // Given
+      const imageType = 'image/jpeg';
+      const binaryType = 'application/octet-stream';
+      final testImageFile = PhysicalResourceProvider.INSTANCE.getFile(
+        append(testResourceDirectory, 'test3', 'favicon.png').path
+      );
+      final testTextFile = PhysicalResourceProvider.INSTANCE.getFile(
+        append(testResourceDirectory, 'test3', 'test_file.txt').path
+      );
+
+      // When
+      when(() => file.path).thenReturn(testImageFile.path);
+      final imageModel = DocsMimeType(imageType);
+      final imageString = imageModel.readAsStringSync(file);
+
+      when(() => file.path).thenReturn(testTextFile.path);
+      final binaryModel = DocsMimeType(binaryType);
+      final binaryString = imageModel.readAsStringSync(file);
+
+      // Then
+      expect(imageModel.type, imageType);
+      expect(binaryModel.type, binaryType);
+
+      expect(imageString, isNotEmpty);
+      expect(binaryString, isNotEmpty);
     });
   });
 }
