@@ -37,6 +37,7 @@ List<String> changeOutputDir(List<String> arguments, Directory output) {
 ///
 /// Strictly speaking, this reads metadata of whatever directory is given.
 String obtainAppVersion(String gitDirectory) {
+  // There is no benefit to using 'overlayPackageMetaProvider' here instead.
   final metaProvider = pubPackageMetaProvider;
   final appFolder = metaProvider.resourceProvider.getFolder(gitDirectory);
   // Assert non-null value. If the metadata is null, pubspec might be damaged.
