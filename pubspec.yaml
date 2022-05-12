@@ -8,6 +8,10 @@ environment:
 
 dependencies:
   analyzer: ^3.4.1
+  convert:
+    git:
+      url: https://github.com/dart-lang/convert.git
+      ref: fix-47
   dartdoc:
     git:
       url: https://github.com/Cliabhach/dartdoc.git
@@ -20,3 +24,9 @@ dev_dependencies:
   mocktail: ^0.2.0
   test: ^1.19.2
   very_good_analysis: ^2.4.0
+
+dependency_overrides:
+  convert:
+    git:
+      url: https://github.com/dart-lang/convert.git
+      ref: fix-47

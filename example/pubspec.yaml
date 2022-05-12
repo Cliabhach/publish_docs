@@ -27,6 +27,12 @@ dev_dependencies:
 # Essential for version constraint matching; pub get fails otherwise
 dependency_overrides:
   test_api: ^0.4.9
+  # There is a bug in the 3.0.1 release of 'convert'; request the branch with
+  # the fix.
+  convert:
+    git:
+      url: https://github.com/dart-lang/convert.git
+      ref: fix-47
 
 flutter:
   uses-material-design: true
