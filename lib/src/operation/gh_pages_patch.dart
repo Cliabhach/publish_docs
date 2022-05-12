@@ -2,7 +2,6 @@
 /// Utility file for working with GitHub Pages.
 import 'dart:io';
 
-import 'package:git/git.dart';
 import 'package:publish_docs/src/git/commands.dart';
 
 import 'package:publish_docs/src/operation/docs_bridge.dart';
@@ -22,13 +21,13 @@ void logStatus(String message) {
 /// Make sure [outputDirectory] points to the directory where only generated
 /// documentation files are located - the [generateAndWaitForDocs] call is
 /// allowed to overwrite anything in there.
-Future<String> generateDocsPatch(GitCommands gitDir, Directory outputDirectory,
+Future<String> generateDocsPatch(GitCommands git, Directory outputDirectory,
     List<String> arguments, String startingBranchRef) async {
   // Task 1: Pull version number
-  final versionString = await obtainDocsVersion(gitDir).then((s) => s.trim());
+  final versionString = await obtainDocsVersion(git).then((s) => s.trim());
   logStatus('(updating GitHub Pages for version $versionString)');
   // Task 2: Prime the git index with files from the gh-pages branch
-  await checkoutGitHubBranch(gitDir, paths: [outputDirectory.path]);
+  await checkoutGitHubBranch(git, paths: [outputDirectory.path]);
   logStatus('Checked out files from gh-pages into ${outputDirectory.path}.');
   // Task 3: Generate docs into [outputDirectory]
   final modifiedArguments = changeOutputDir(arguments, outputDirectory);
@@ -39,7 +38,7 @@ Future<String> generateDocsPatch(GitCommands gitDir, Directory outputDirectory,
   logStatus('...there, documentation generated!');
   // Task 5: Save our changes into a patch (this creates 2 temp commits)
   final patch = await patchOutOfGitDiff(
-    gitDir,
+    git,
     outputDirectory.path,
     'docs: Regenerate to reflect $versionString',
   );
@@ -47,7 +46,7 @@ Future<String> generateDocsPatch(GitCommands gitDir, Directory outputDirectory,
   if (patch.isEmpty) {
     throw UnsupportedError("Patch wasn't generated correctly. Stopping now.");
   }
-  await gitDir.hardReset(startingBranchRef);
+  await git.hardReset(startingBranchRef);
   return patch;
 }
 
