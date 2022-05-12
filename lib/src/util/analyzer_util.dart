@@ -19,7 +19,7 @@ Future<PackageMetaProvider> overlayPackageMetaProvider() async {
 
   final assetsAbsolutePath = absolutePath('doc', 'assets');
 
-  final provider = obtainAssetsOverlayProvider(
+  final provider = await obtainAssetsOverlayProvider(
       pathForLayers: assetsAbsolutePath,
       layers: [
         assetsAbsolutePath // First entry in this array should always be this directory
@@ -106,14 +106,14 @@ String absolutePath(String part1, [String? part2]) {
 /// 4. We check for and return that file if it exists.
 /// 5. If _that_ doesn't exist, then we error out.
 ///
-fs.ResourceProvider obtainAssetsOverlayProvider(
-    {String pathForLayers = '', List<String> layers = const []}) {
+Future<fs.ResourceProvider> obtainAssetsOverlayProvider(
+    {String pathForLayers = '', List<String> layers = const []}) async {
   final base = PhysicalResourceProvider.INSTANCE;
   final overlay = OverlayResourceProvider(base);
   // NB: we cannot use a 'List.forEach' call here, as that makes dart run the
   // body of the loop for as many elements as it can in parallel. And that
   // breaks the 'overlay.hasOverlay' check seen inside _registerElement.
-  Future.forEach(layers, (String layer) async {
+  await Future.forEach(layers, (String layer) async {
     await _registerElementsInLayer(base, pathForLayers, overlay, layer,);
   });
 
@@ -137,6 +137,8 @@ Future<void> _registerElement(fs.Resource element, String pathForLayers,
   final filename = path.basename(element.path);
   final pathForCaller = absolutePath(pathForLayers, filename);
 
+  //print('Considering registration for $pathForCaller.');
+
   if (overlay.hasOverlay(pathForCaller)) {
     // Already found in a prior layer; we can go on to the next element.
   } else if (element is fs.File) {
@@ -151,6 +153,7 @@ Future<void> _registerElement(fs.Resource element, String pathForLayers,
         content: mimeType.readAsStringSync(element),
         modificationStamp: element.modificationStamp,
       );
+      //print('_Registered overlay for "$filename" in $layer.');
     }
   } else {
     print('Ignoring detected Resource "$filename" in $layer.');

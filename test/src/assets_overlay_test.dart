@@ -17,19 +17,19 @@ void main() {
     setUp(() {
       testResourcePath = resourcePath('overlay');
     });
-    test('can retrieve physical files', () {
-      provider = obtainAssetsOverlayProvider();
+    test('can retrieve physical files', () async {
+      provider = await obtainAssetsOverlayProvider();
 
       final test1Path = path.absolute(testResourcePath, 'test1');
       final testFolder = provider.getFolder(test1Path);
       // Make sure that our preparation is all right.
       expect(testFolder.exists, isTrue);
     });
-    test('can find basic file', () {
+    test('can find basic file', () async {
       final test1Path = path.absolute(testResourcePath, 'test1');
       final parentPath = path.absolute(test1Path, 'parent');
 
-      provider = obtainAssetsOverlayProvider(pathForLayers: parentPath);
+      provider = await obtainAssetsOverlayProvider(pathForLayers: parentPath);
 
       // ...now look for 'child.txt' and 'not-here.txt'
       final parentFolder = provider.getFolder(parentPath);
@@ -38,14 +38,14 @@ void main() {
       expect(childResource.exists, isTrue);
       expect(notHereResource.exists, isFalse);
     });
-    test('can find basic file via path alias', () {
+    test('can find basic file via path alias', () async {
       final test1Path = path.absolute(testResourcePath, 'test1');
       final parentPath = path.absolute(test1Path, 'parent');
       final fakeParentPath = path.absolute(test1Path, 'not-present-on-disk');
 
       expect(Directory(fakeParentPath).existsSync(), isFalse);
 
-      provider = obtainAssetsOverlayProvider(
+      provider = await obtainAssetsOverlayProvider(
         pathForLayers: fakeParentPath,
         layers: [
           parentPath
@@ -58,7 +58,7 @@ void main() {
       expect(childResource.exists, isTrue);
       expect(notHereResource.exists, isFalse);
     });
-    test('can find overlay file', () {
+    test('can find overlay file', () async {
       final test2Path = path.absolute(testResourcePath, 'test2');
 
       final noFilesPath = path.absolute(test2Path, 'no-files');
@@ -67,7 +67,7 @@ void main() {
 
       final parentPath = path.absolute(test2Path, 'parent');
 
-      provider = obtainAssetsOverlayProvider(
+      provider = await obtainAssetsOverlayProvider(
         pathForLayers: parentPath,
         layers: [
           noFilesPath,
