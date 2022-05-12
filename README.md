@@ -46,11 +46,16 @@ the really dangerous things.
 
 #### How do we use `git`?
 
-First off, our use of the `git format-patch` command is slightly
-unusual. The [TODO: link]() has more details on why.
+We use the `git format-patch` command to create each documentation
+update. This patch is then applied to the GitHub Pages branch.
 
-Here is a rundown of the kinds of commands we run, with explanations
-of why they're in this project:
+[Adding docs changes to the repo](#adding-docs-changes-to-the-repo)
+has more details on why we do this, and
+[gh_pages_patch.dart][pages_patch_file] contains a good bit of the
+relevant code.
+
+Here is a rundown of the other kinds of commands we run, with
+explanations of why they're in this project:
 
 | Command       | Our usage                                        |
 |---------------|--------------------------------------------------|
@@ -72,7 +77,7 @@ understanding of what `git` library functions we call.
 
 As long as this library has null-safety and lets us run `git` commands,
 it doesn't matter too much which version is in use. There should be no
-problem upgrading to newer versions.
+problem upgrading to newer versions of this library.
 
 ### dartdoc
 
@@ -168,6 +173,31 @@ adding any of the currently-supported files to `doc/assets/`.
 
 ## Limitations
 
+### Adding docs changes to the repo
+
+Since documentation tends to take up an awful lot of space, we try to
+reuse existing files where possible. To that end we generate new docs
+right on top of existing documentation, and create a patch out of the
+diff between the old and new.
+
+We make three assumptions about the process:
+
+1. Generated documentation is stored on its own branch.
+2. Each commit on that branch has just one version of the docs.
+3. That branch already exists and has at least one commit.
+
+This matches a classic 'gh-pages' approach to GitHub Pages, but you
+don't _have_ to follow that. The settings part of your GitHub repo
+lets you choose to load documentation from any branch, not just one
+called 'gh-pages', and of course the one-version-per-commit thing is
+just a convention.
+
+Keeping those three assumptions, though, does make it a lot easier for
+this project to work properly. In a future version of `publish_docs`,
+perhaps we'll support more kinds of repo configuration. The wiki for a
+GitHub project is only a special kind of Git Repository, after all, so
+there might even be an option to upload markdown-style docs into that.
+
 ### Our stance on command-line `dartdoc` options
 
 There are things that `dartdoc` can do that are only configured with
@@ -197,3 +227,4 @@ We provide a value of `doc/assets/` for that.
 [dartdoc_2934]: https://github.com/dart-lang/dartdoc/issues/2934
 [doxygen_diagrams]: https://www.doxygen.nl/manual/diagrams.html
 [git_commands_class]: lib/src/git/commands.dart
+[pages_patch_file]: lib/src/operation/gh_pages_patch.dart
