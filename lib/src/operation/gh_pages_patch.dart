@@ -3,18 +3,10 @@
 import 'dart:io';
 
 import 'package:publish_docs/src/git/commands.dart';
-
+import 'package:publish_docs/src/operation/branch_update.dart';
 import 'package:publish_docs/src/operation/docs_bridge.dart';
 import 'package:publish_docs/src/util/doc_util.dart';
 import 'package:publish_docs/src/util/git_util.dart';
-
-/// Add a message to the log.
-///
-/// This way methods like [generateDocsPatch] and [patchOutOfGitDiff] can
-/// provide realtime updates on what they are doing.
-void logStatus(String message) {
-  print('GH Pages: $message');
-}
 
 /// Create a patch-file with updates to published documentation.
 ///

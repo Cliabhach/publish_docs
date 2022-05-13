@@ -4,8 +4,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
-import 'package:publish_docs/src/git/commands.dart';
 
+import 'package:publish_docs/src/git/commands.dart';
+import 'package:publish_docs/src/operation/branch_update.dart';
 import 'package:publish_docs/src/operation/gh_pages_patch.dart';
 import 'package:publish_docs/src/util/git_util.dart';
 

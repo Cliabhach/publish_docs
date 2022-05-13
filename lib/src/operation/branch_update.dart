@@ -48,7 +48,13 @@ abstract class BranchUpdate {
   Future<void> run(String branchName, List<String> arguments);
 }
 
-
+/// Add a message to the log.
+///
+/// This way methods like [generateDocsPatch] and [patchOutOfGitDiff] can
+/// provide realtime updates on what they are doing.
+void logStatus(String message) {
+  print('GH Pages: $message');
+}
 
 
 
