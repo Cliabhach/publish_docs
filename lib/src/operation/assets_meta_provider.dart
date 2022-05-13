@@ -8,11 +8,19 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:dartdoc/dartdoc.dart';
 
+import 'package:publish_docs/src/private/assets_file_system.dart';
 import 'package:publish_docs/src/private/assets_layers.dart';
 import 'package:publish_docs/src/private/assets_resource_provider.dart';
 import 'package:publish_docs/src/util/path_util.dart';
 
 /// A modified copy of [pubPackageMetaProvider].
+///
+/// The object returned here will be backed by an [AssetsResourceProvider], and
+/// with that we can offer graceful fallbacks.
+///
+/// Your own project assets (whichever you like) go in 'doc/assets/'. Whatever
+/// you don't provide, we will find in the `publish_docs` package in the
+/// `lib/resources/` directory.
 Future<PackageMetaProvider> obtainPackageMetaProvider() async {
 
   final assetsAbsolutePath = absolutePath('doc', 'assets');
@@ -24,6 +32,7 @@ Future<PackageMetaProvider> obtainPackageMetaProvider() async {
       ] + await publishDocsResourceLayers() // Order by decreasing importance
     );
 
+  // This way of finding the sdkDir came from [pubPackageMetaProvider].
   final sdkDir = PhysicalResourceProvider.INSTANCE
         .getFile(absolutePath(io.Platform.resolvedExecutable))
         .parent
