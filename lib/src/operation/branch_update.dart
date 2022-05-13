@@ -3,6 +3,8 @@
 import 'dart:io';
 
 import 'package:publish_docs/src/git/commands.dart';
+import 'package:publish_docs/src/operation/docs_bridge.dart';
+import 'package:publish_docs/src/util/doc_util.dart';
 
 /// Update a git branch with new project docs.
 ///
@@ -23,12 +25,19 @@ abstract class BranchUpdate {
   /// Figure out what version string best reflects this project.
   ///
   /// This should generally be used as part of new commit messages.
-  Future<void> defineVersion();
+  Future<String> defineVersion() async {
+    final versionString = await obtainDocsVersion(git).then((s) => s.trim());
+    logStatus('(updating GitHub Pages for version $versionString)');
+    return versionString;
+  }
 
   /// Generate the docs!
   ///
   /// Documentation will be placed in the given directory.
-  Future<void> generate(Directory outputDirectory, List<String> arguments);
+  Future<void> generate(Directory outputDirectory, List<String> arguments) {
+    final modified = changeOutputDir(arguments, outputDirectory);
+    return generateAndWaitForDocs(modified);
+  }
 
   /// Or show index.html in a browser?
   ///
