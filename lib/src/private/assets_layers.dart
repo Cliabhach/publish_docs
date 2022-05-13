@@ -22,7 +22,8 @@ Future<List<String>> publishDocsResourceLayers() async {
 
 /// Find the [Folder] on disk that represents a given `package:` [uri].
 ///
-/// Method inspired by some of the private 'ResourceLoader' code in `dartdoc`.
+/// Method inspired by some of the private 'ResourceLoader' code in `dartdoc`
+/// [here](https://github.com/dart-lang/dartdoc/blob/26d38618cc245d49/lib/src/generator/resource_loader.dart#L42).
 Future<String> _uriAsPath(String uri, ResourceProvider provider) async {
   final resourcesUri = Uri.parse(uri);
   final resolvedUri = await Isolate.resolvePackageUri(resourcesUri);

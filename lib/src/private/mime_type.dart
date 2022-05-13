@@ -11,7 +11,8 @@ import 'package:publish_docs/src/private/binary_code_page.dart';
 /// Representation of a mime type/MIME-type/mimetype.
 ///
 /// Beyond the expected 'type' property, this also contains a quick method
-/// to load the content of [fs.File]s of the given type into a [String].
+/// to load the content of [fs.File]s of the given type into a [String] or
+/// [Uint8List].
 class DocsMimeType {
   /// Create a new [DocsMimeType] with the specified value.
   DocsMimeType(this.type);
