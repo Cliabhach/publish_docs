@@ -42,7 +42,7 @@ abstract class BranchUpdate {
   /// Or show index.html in a browser?
   ///
   /// With a little web frontend, that could be pretty....
-  Future<void> showOutputDirectory();
+  Future<void> showOnCompleted(Directory outputDirectory);
 
   /// Make the update using this function!
   Future<void> run(String branchName, List<String> arguments);
