@@ -53,6 +53,7 @@ class GitDirCommands extends GitCommands {
 
   @override
   Future<void> checkout(String gitRef, {List<String> paths = const []}) {
+    // We should upstream the 'checkout' method. Maybe.
     if (paths.isEmpty) {
       return gitDir.runCommand(['checkout', gitRef,]);
     } else {

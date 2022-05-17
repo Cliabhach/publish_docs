@@ -76,13 +76,10 @@ extension GitCommandsExtension on GitCommands {
     return am(patchFile.trim());
   }
 
-  /// Switch all of [paths] to the branch whose SHA-1 hash is [sha].
+  /// Switch all of [paths] to the branch whose name is [name].
   ///
-  /// Make sure to provide a SHA-1 of the commit itself, and not the tree SHA
-  /// of the contents of the commit. The [GitCommands.branchSha] method will
-  /// return the right value for [sha].
-  Future<void> checkoutBranch(String sha, {List<String> paths = const []}) {
-    // We should upstream the 'checkout' method. Maybe.
-    return checkout(sha, paths: paths);
+  /// Make sure to provide the name of the branch itself, and not a SHA-1 hash.
+  Future<void> checkoutBranch(String name, {List<String> paths = const []}) {
+    return checkout(name, paths: paths);
   }
 }

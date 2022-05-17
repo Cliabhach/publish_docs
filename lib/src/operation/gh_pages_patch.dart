@@ -57,7 +57,5 @@ Future<String> generateDocsPatch(GitCommands git, Directory outputDirectory,
 Future<void> checkoutGitHubBranch(GitCommands git,
     {List<String> paths = const []}) async {
 
-  final branchRef = await git.branchSha(name: 'gh-pages');
-
-  return git.checkoutBranch(branchRef, paths: paths);
+  return git.checkoutBranch('gh-pages', paths: paths);
 }
