@@ -32,6 +32,18 @@ abstract class GitCommands {
   /// To be used along-side [formatPatch].
   Future<void> am(String patchFilePath);
 
+  /// Check whether a branch with the given name exists in this repository.
+  ///
+  /// This is a very simple check that only looks at branches that exist
+  /// _locally_. It's possible for a branch to have been created on the remote
+  /// with the name [branchName], and for this to return false because no-one
+  /// has run `git fetch` and `git checkout` to create a local copy of that
+  /// branch.
+  ///
+  /// This is roughly equivalent to checking whether `git show-ref` contains
+  /// 'refs/heads/[branchName]'.
+  Future<bool> branchExists(String branchName);
+
   /// Retrieve the name of the current branch.
   ///
   /// Equivalent to `git symbolic-ref HEAD`.

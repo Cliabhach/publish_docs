@@ -31,6 +31,11 @@ class GitDirCommands extends GitCommands {
   }
 
   @override
+  Future<bool> branchExists(String branchName) async {
+    return gitDir.branchReference(branchName).then((ref) => ref != null);
+  }
+
+  @override
   Future<String> branchName() {
     return gitDir.currentBranch().then((ref) => ref.branchName);
   }
