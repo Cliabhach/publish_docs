@@ -2,12 +2,12 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:git/git.dart';
 
 import 'package:path/path.dart' as path;
+import 'package:publish_docs/src/git/commands.dart';
 
+import 'package:publish_docs/src/operation/gh_pages_patch.dart';
 import 'package:publish_docs/src/util/git_util.dart';
-import 'package:publish_docs/src/util/pages_util.dart';
 
 /// GitHub Pages only knows how to read from two possible locations:
 ///
@@ -35,25 +35,25 @@ import 'package:publish_docs/src/util/pages_util.dart';
 /// process. If there are locally-modified files outside of `docs/api/` then we
 /// will stop right after creating the diff; if there are locally-modified files
 /// _in_ `docs/api/`, then they'll be erased during the 'checkout' step.
-Future<void> updateGitHubPages(GitDir gitDir, List<String> arguments) async {
+Future<void> updateGitHubPages(GitCommands git, List<String> arguments) async {
   // Task 0: Save current state, in case something goes wrong.
-  final startingBranch = gitDir.currentBranch();
-  await gitDir.runCommand(['stash']);
+  final startingBranchSha = await git.branchSha();
+  final startingBranchName = await git.branchName();
+  await git.stash();
   logStatus('Found the git directory.');
   // Task 1: Define constants for use in this function
   final outputDirectory = Directory(path.absolute('docs', 'api'));
-  final startingBranchRef = await startingBranch;
   // Task 2: Generate a documentation patch
   final patch = await generateDocsPatch(
-    gitDir,
+    git,
     outputDirectory,
     arguments,
-    startingBranchRef,
+    startingBranchSha,
   );
   // Task 3: Switch branch
-  await checkoutGitHubBranch(gitDir);
+  await checkoutGitHubBranch(git);
   // Task 4: Apply patch as a commit
-  await gitDir.applyPatch(patch);
+  await git.applyPatch(patch);
   // Task 5: Print instructions
   final indexDocFile =
       Directory(path.absolute(outputDirectory.path, 'index.html'));
@@ -83,28 +83,11 @@ When you're done, run one of the following to return your original branch:
 # or
 `git checkout -`
 # or
-`git checkout ${startingBranchRef.branchName}`
+`git checkout $startingBranchName`
 
 ''',
   );
   // Task 6: Switch back
-  //await gitDir.checkoutBranch("prior", startingBranch);
+  // await git.checkoutBranch(startingBranchSha);
   //logStatus("We're back at the original branch now.");
-}
-
-/// Check for a couple of important things, and return false iff they're wrong.
-///
-/// Right now, all we care about is whether we still have the 'bin' directory
-/// where we store programs like this one. If it's missing, we're probably in
-/// the wrong project or on the wrong branch.
-Future<void> sanityCheck(Directory binDirectory) {
-  // Make sure this is the right repository
-  return binDirectory.exists().then((doesExist) async {
-    if (!doesExist || binDirectory.listSync().isEmpty) {
-      throw UnsupportedError(
-        'You have to run this from the root directory of'
-        " our project - otherwise the file operations won't work correctly.",
-      );
-    }
-  });
 }
