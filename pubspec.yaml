@@ -17,10 +17,7 @@ executables:
 
 dependencies:
   analyzer: ^3.4.1
-  convert:
-    git:
-      url: https://github.com/dart-lang/convert.git
-      ref: fix-47
+  convert: '>=3.0.2 <3.2.0'
   dartdoc: 5.1.0
   git: 2.0.0
   mime: ^1.0.2
