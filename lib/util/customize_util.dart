@@ -5,24 +5,23 @@ import 'dart:async';
 
 import 'package:dartdoc/dartdoc.dart';
 import 'package:dartdoc/options.dart';
+import 'package:git/git.dart';
 
-import 'package:publish_docs/src/git/commands.dart';
-import 'package:publish_docs/src/operation/assets_meta_provider.dart';
+import 'package:publish_docs/src/util/analyzer_util.dart';
 import 'package:publish_docs/src/util/doc_util.dart';
 import 'package:publish_docs/src/util/git_util.dart';
-import 'package:publish_docs/src/util/path_util.dart';
 
 /// Figure out what version of documentation we have here.
 ///
 /// Will always return a valid https://semver.org/ String. The short git commit
 /// hash will be in the 'metadata' part of that version.
-Future<String> obtainDocsVersion(GitCommands git) async {
+Future<String> obtainDocsVersion(GitDir forGit) async {
   // Part 1: Git
   // Short Git-Hash for the currently-checked-out commit
-  final currentHash = await obtainGitVersion(git);
+  final currentHash = await obtainGitVersion(forGit);
 
   // Part 2: Dart
-  final pubspecVersion = obtainAppVersion(git.path);
+  final pubspecVersion = obtainAppVersion(forGit.path);
 
   // We combine these two into a semver-compatible version string
   return '$pubspecVersion+$currentHash';
@@ -39,7 +38,7 @@ Future<String> obtainDocsVersion(GitCommands git) async {
 /// See also [obtainDartdoc] and [addAssets].
 Future<DartdocOptionContext> generateAndWaitForDocs(
     List<String> arguments) async {
-  final metaProvider = await obtainPackageMetaProvider();
+  final metaProvider = await overlayPackageMetaProvider();
   final dartdoc = await getDartdocWithAssets(metaProvider, arguments);
   if (dartdoc != null) {
     final docCompleter = Completer<DartdocOptionContext>();
@@ -67,7 +66,7 @@ Future<Dartdoc?> getDartdocWithAssets(
   Dartdoc? dartdoc;
 
   // Request usage of our 'assets' instead of dartdoc's bundled resources.
-  final modifiedArguments = addAssets(arguments);
+  final modifiedArguments = addAssets(metaProvider, arguments);
 
   final config = parseOptions(metaProvider, modifiedArguments);
   if (config == null) {
@@ -84,8 +83,10 @@ Future<Dartdoc?> getDartdocWithAssets(
 /// add it to the arguments list here.
 ///
 /// Use the returned list for a call to [parseOptions].
-List<String> addAssets(List<String> arguments,) {
-  final assetsAbsolutePath = absolutePath('doc', 'assets');
+List<String> addAssets(
+    PackageMetaProvider metaProvider, List<String> arguments) {
+  final assetsAbsolutePath =
+      metaProvider.resourceProvider.pathContext.absolute('doc', 'assets');
   final modifiedArguments = arguments + ['--resources-dir', assetsAbsolutePath];
   return modifiedArguments;
 }
