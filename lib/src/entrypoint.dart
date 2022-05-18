@@ -47,6 +47,12 @@ Future<void> updateGitHubDocs(List<String> arguments) {
     if (isGitDirectory) {
       GitDir.fromExisting(currentPath).then((gitDir) async {
         final git = GitDirCommands(gitDir);
+        if (!await git.branchExists('gh-pages')) {
+          throw UnsupportedError(
+              'Please ensure that your repository has a branch '
+                  'called `gh-pages` before continuing.'
+          );
+        }
         return updateGitHubPages(git, arguments);
       });
     }
