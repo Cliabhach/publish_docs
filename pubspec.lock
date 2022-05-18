@@ -90,11 +90,9 @@ packages:
   dartdoc:
     dependency: "direct main"
     description:
-      path: "."
-      ref: model-element-fixes
-      resolved-ref: a4424e73478c7727578ab5c8c7c05018d0c79501
-      url: "https://github.com/Cliabhach/dartdoc.git"
-    source: git
+      name: dartdoc
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "5.1.0"
   file:
     dependency: transitive
