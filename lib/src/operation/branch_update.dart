@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:publish_docs/src/git/commands.dart';
 import 'package:publish_docs/src/operation/docs_bridge.dart';
 import 'package:publish_docs/src/util/doc_util.dart';
+import 'package:publish_docs/src/util/path_util.dart';
 
 /// Update a git branch with new project docs.
 ///
@@ -42,7 +43,25 @@ abstract class BranchUpdate {
   /// Or show index.html in a browser?
   ///
   /// With a little web frontend, that could be pretty....
-  Future<void> showOnCompleted(Directory outputDirectory);
+  Future<void> showOnCompleted(Directory output) {
+    final indexDocFile = Directory(absolutePath(output.path, 'index.html'));
+    logStatus(
+      '''
+The gh-pages branch has been updated. Please review the files in docs/api/ to
+make sure there aren't any surprises there. We recommend opening the index.html
+(located at ${indexDocFile.uri} )
+in the browser, at the very least. If it all looks good and there are no
+conflicts with the remote, you can push the new pages to GitHub with a simple
+
+`git push`
+
+If there's a conflict, or there are other issues with the changes, you can
+remove the new commit by calling
+
+`git reset --hard HEAD~`
+''');
+    return Future.value();
+  }
 
   /// Make the update using this function!
   Future<void> run(String branchName, List<String> arguments);

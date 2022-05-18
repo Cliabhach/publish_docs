@@ -62,7 +62,7 @@ Future<void> updateGitHubPages(GitCommands git, List<String> arguments) async {
     '''
 The gh-pages branch has been updated. Please review the files in docs/api/ to
 make sure there aren't any surprises there. We recommend opening the index.html
-(located at file://${indexDocFile.path} )
+(located at ${indexDocFile.uri} )
 in the browser, at the very least. If it all looks good and there are no
 conflicts with the remote, you can push the new pages to GitHub with a simple
 
