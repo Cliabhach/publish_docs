@@ -16,10 +16,22 @@ executables:
   docs_commit: commit
 
 dependencies:
+  # The official dart-code analysis library. We depend on some unstable parts of its API in
+  # order to overlay assets and/or resources correctly.
   analyzer: ^3.4.1
+  # Encoders and decoders for string-like objects (including regular strings). We use a
+  # feature added in 3.0.x to temporarily store PNGs in memory as if they were strings.
   convert: '>=3.0.2 <3.2.0'
+  # The official documentation library for dart code. When changing this version, also look
+  # at assets_layers.dart - the directories we give there _must_ be compatible. Copy over
+  # files from `dartdoc` itself (and update the LICENSE) if appropriate.
   dartdoc: 5.1.2
+  # A wrapper around the git Source Control Management system. Essential to the 'commit'
+  # aspect of this library, and an all-around helpful library in general.
   git: 2.0.0
+  # Basic utility for working with mime types. This is configurable and can store arbitrary
+  # type info....but in practice we can expect more reliable info to come from the host
+  # system's mime type database.
   mime: ^1.0.2
 
 dev_dependencies:
