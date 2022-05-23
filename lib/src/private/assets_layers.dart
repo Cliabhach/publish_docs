@@ -19,7 +19,7 @@ Future<List<String>> publishDocsResourceLayers() async {
   final provider = PhysicalResourceProvider.INSTANCE;
   const ourPackage = 'package:publish_docs';
   final fixes = _uriAsPath('$ourPackage/resources/standard-fixes', provider);
-  final base = _uriAsPath('$ourPackage/resources/dartdoc-5.1.0', provider);
+  final base = _uriAsPath('$ourPackage/resources/dartdoc-5.1.2', provider);
   return [ await fixes, await base ];
 }
 

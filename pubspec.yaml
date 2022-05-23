@@ -18,7 +18,7 @@ executables:
 dependencies:
   analyzer: ^3.4.1
   convert: '>=3.0.2 <3.2.0'
-  dartdoc: 5.1.0
+  dartdoc: 5.1.2
   git: 2.0.0
   mime: ^1.0.2
 
