@@ -8,16 +8,19 @@ import 'package:analyzer/file_system/physical_file_system.dart';
 
 /// Create a list of directories where we might find assets.
 ///
-/// We currently only return one item in that list, but in future we'd like to
-/// support themes and that would mean returning a list with both a 'common'
-/// directory and a 'theme' directory.
+/// We currently only return two items in that list - a directory with our
+/// custom asset fixes and upgrades, and a 'base' directory with a copy of the
+/// assets bundled with a specific dartdoc release. In future we'd like to
+/// support themes and that would mean returning a list with a 'theme'
+/// directory too.
 ///
 /// Delegates some of the work to [_uriAsPath].
 Future<List<String>> publishDocsResourceLayers() async {
   final provider = PhysicalResourceProvider.INSTANCE;
   const ourPackage = 'package:publish_docs';
+  final fixes = _uriAsPath('$ourPackage/resources/standard-fixes', provider);
   final base = _uriAsPath('$ourPackage/resources/dartdoc-5.1.0', provider);
-  return [ await base ];
+  return [ await fixes, await base ];
 }
 
 /// Find the [Folder] on disk that represents a given `package:` [uri].
