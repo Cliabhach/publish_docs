@@ -11,7 +11,6 @@ import 'dart:async';
 import 'package:git/git.dart';
 import 'package:path/path.dart' as path;
 
-import 'package:publish_docs/publish_docs.dart';
 import 'package:publish_docs/src/git/dir_commands.dart';
 import 'package:publish_docs/src/operation/operation.dart';
 
