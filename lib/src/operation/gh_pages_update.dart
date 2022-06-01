@@ -36,6 +36,7 @@ import 'package:publish_docs/src/util/git_util.dart';
 /// process. If there are locally-modified files outside of `docs/api/` then we
 /// will stop right after creating the diff; if there are locally-modified files
 /// _in_ `docs/api/`, then they'll be erased during the 'checkout' step.
+@Deprecated('Please migrate to InPlaceBranchUpdate')
 Future<void> updateGitHubPages(GitCommands git, List<String> arguments) async {
   // Task 0: Save current state, in case something goes wrong.
   final startingBranchSha = await git.branchSha();

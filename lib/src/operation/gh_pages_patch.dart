@@ -13,6 +13,7 @@ import 'package:publish_docs/src/util/git_util.dart';
 /// Make sure [outputDirectory] points to the directory where only generated
 /// documentation files are located - the [generateAndWaitForDocs] call is
 /// allowed to overwrite anything in there.
+@Deprecated('Please migrate to InPlaceBranchUpdate')
 Future<String> generateDocsPatch(GitCommands git, Directory outputDirectory,
     List<String> arguments, String startingBranchRef) async {
   // Task 1: Pull version number
