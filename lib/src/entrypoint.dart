@@ -34,7 +34,7 @@ Future<void> generateDocs(List<String> arguments) async {
 /// Copy the latest documentation into the 'gh-pages' (GitHub Pages) branch.
 ///
 /// This performs some quick checks to make sure this process is running in a
-/// well-defined Git Directory, and then starts [updateGitHubPages]
+/// well-defined Git Directory, and then starts [InPlaceBranchUpdate]
 /// asynchronously. Check out the docs on that function for more details on
 /// exactly what happens.
 ///
@@ -53,7 +53,7 @@ Future<void> updateGitHubDocs(List<String> arguments) {
                   'called `gh-pages` before continuing.'
           );
         }
-        return updateGitHubPages(git, arguments);
+        return InPlaceBranchUpdate(git).run('gh-pages', arguments);
       });
     }
   });

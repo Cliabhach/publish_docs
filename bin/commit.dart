@@ -7,7 +7,7 @@ import 'package:publish_docs/src/private/assets_resource_provider.dart';
 ///
 /// Invocation: `dart pub run publish_docs:commit`
 ///
-/// Further details: [updateGitHubDocs], [updateGitHubPages],
+/// Further details: [updateGitHubDocs], [InPlaceBranchUpdate],
 /// [obtainAssetsProvider].
 Future<void> main(List<String> arguments) async {
   final assetsAbsolutePath = absolutePath('doc', 'assets');
