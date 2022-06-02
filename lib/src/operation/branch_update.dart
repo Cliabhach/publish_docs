@@ -23,6 +23,14 @@ abstract class BranchUpdate {
   /// We use this to execute git commands
   final GitCommands git;
 
+  /// Add a message to the log.
+  ///
+  /// This way methods like [generateDocsPatch] and [patchOutOfGitDiff] can
+  /// provide realtime updates on what they are doing.
+  void logStatus(String message) {
+    print('GH Pages: $message');
+  }
+
   /// Figure out what version string best reflects this project.
   ///
   /// This should generally be used as part of new commit messages.
@@ -66,15 +74,3 @@ remove the new commit by calling
   /// Make the update using this function!
   Future<void> run(String branchName, List<String> arguments);
 }
-
-/// Add a message to the log.
-///
-/// This way methods like [generateDocsPatch] and [patchOutOfGitDiff] can
-/// provide realtime updates on what they are doing.
-void logStatus(String message) {
-  print('GH Pages: $message');
-}
-
-
-
-
