@@ -6,7 +6,6 @@ import 'package:path/path.dart' as path;
 
 import 'package:publish_docs/src/git/commands.dart';
 import 'package:publish_docs/src/operation/branch_update.dart';
-import 'package:publish_docs/src/operation/gh_pages_patch.dart';
 import 'package:publish_docs/src/util/git_util.dart';
 
 /// A class for adding a Git commit to a branch.
@@ -98,7 +97,7 @@ When you're done, run one of the following to return your original branch:
     // Task 2: Generate a documentation patch
     _patch = await generateDocsPatch(branchName, arguments,);
     // Task 3: Switch branch
-    await checkoutGitHubBranch(git);
+    await git.checkoutBranch(branchName);
     // Task 4: Apply patch as a commit
     await git.applyPatch(_patch);
     // Task 5: Print instructions
@@ -122,7 +121,7 @@ When you're done, run one of the following to return your original branch:
     // Task 1: Pull version number
     final versionString = await defineVersion();
     // Task 2: Prime the git index with files from the gh-pages branch
-    await checkoutGitHubBranch(git, paths: [outputDirectory.path]);
+    await git.checkoutBranch('gh-pages', paths: [outputDirectory.path]);
     logStatus('Checked out files from gh-pages into ${outputDirectory.path}.');
     // Task 3: Generate docs into [outputDirectory]
     final generateFuture = generate(outputDirectory, arguments);
