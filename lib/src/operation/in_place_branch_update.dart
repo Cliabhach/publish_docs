@@ -96,8 +96,7 @@ When you're done, run one of the following to return your original branch:
     // Task 1: Save current state, in case something goes wrong.
     await _captureInitialState();
     // Task 2: Generate a documentation patch
-    // TODO(Cliabhach): Pass branchName in, use fields for other params (?)
-    _patch = await generateDocsPatch(git, outputDirectory, arguments,);
+    _patch = await generateDocsPatch(branchName, arguments,);
     // Task 3: Switch branch
     await checkoutGitHubBranch(git);
     // Task 4: Apply patch as a commit
@@ -118,7 +117,7 @@ When you're done, run one of the following to return your original branch:
   /// Make sure [outputDirectory] points to the directory where only generated
   /// documentation files are located - the [generate] call is allowed to
   /// overwrite anything in there.
-  Future<String> generateDocsPatch(GitCommands git, Directory outputDirectory,
+  Future<String> generateDocsPatch(String branchName,
       List<String> arguments) async {
     // Task 1: Pull version number
     final versionString = await defineVersion();
