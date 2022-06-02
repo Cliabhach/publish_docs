@@ -19,33 +19,37 @@ import 'package:publish_docs/src/util/git_util.dart';
 /// 1. the API root
 /// 2. the 'docs/' directory
 ///
-/// We point it at 'docs/'. The general structure of this method is to generate
-/// docs on top of the latest version of those files, and then run some git
-/// commands to turn that into a diff. We can then apply the diff on top of the
-/// `gh-pages` branch to create a straightforward commit.
+/// This implementation is for repositories who choose to point it at 'docs/'.
+/// It will generate files into that directory on top of whatever commit is
+/// currently checked out, and then use some git commands to attach the new
+/// files to your dedicated GitHub Pages branch. See [run] for more details.
 ///
 /// # How?
 ///
 /// Rough overview of git commands:
 ///
 /// ```bash
-/// git checkout gh-pages docs/api
+/// git checkout $branch docs/api
 /// #(we generate the docs at this point)
 /// git diff > localfile.patch
 /// git reset --hard HEAD
-/// git checkout gh-pages
+/// git checkout $branch
 /// git am localfile.patch
-/// git switch -
 /// ```
 ///
 /// # Additional notes
 ///
-/// We always try to return to the original branch state at the end of the
-/// process. If there are locally-modified files outside of `docs/api/` then we
-/// will stop right after creating the diff; if there are locally-modified files
-/// _in_ `docs/api/`, then they'll be erased during the 'checkout' step.
+/// If there are locally-modified files in the repo then we will save them into
+/// a stash right before creating the diff; if there are files in `docs/api/`
+/// which are only defined on the _original_ branch, then they'll be erased
+/// during the 'checkout' step.
+///
+/// This means **try not to modify the project, _especially the git status_,
+/// while this update is [run]ning**.
 class InPlaceBranchUpdate extends BranchUpdate {
   /// A new [BranchUpdate] that doesn't use a temporary directory.
+  ///
+  /// Call [run] to start the update.
   InPlaceBranchUpdate(GitCommands git) : super(git, logTag: 'GH Pages');
 
   /// Absolute path to the patch created by [patchOutOfGitDiff].
@@ -89,6 +93,17 @@ When you're done, run one of the following to return your original branch:
     return Future.value();
   }
 
+  /// Make the update using this function!
+  ///
+  /// This essentially [generates some docs][generateDocsPatch], and _then_
+  /// creates a patch representing what's changed. We can apply that [_patch] on
+  /// top of the branch called [branchName] to create a straightforward commit -
+  /// and if all goes well we do just that.
+  ///
+  /// The class docs for [InPlaceBranchUpdate] cover the larger question of
+  /// _why_, and inline comments cover the smaller details of _how_.
+  ///
+  /// See also [generate] and [doFormatPatch].
   @override
   Future<void> run(String branchName, List<String> arguments) async {
     logStatus('Found the git directory.');
@@ -113,13 +128,16 @@ When you're done, run one of the following to return your original branch:
 
   /// Create a patch-file with updates to published documentation.
   ///
+  /// This method tries to use docs from an existing branch as a basis for the
+  /// patch. Provide the [name] of that branch as a parameter.
+  ///
   /// Make sure [outputDirectory] points to the directory where only generated
   /// documentation files are located - the [generate] call is allowed to
   /// overwrite anything in there.
   Future<String> generateDocsPatch(String name, List<String> arguments) async {
     // Task 1: Pull version number
     final versionString = await defineVersion();
-    // Task 2: Prime the git index with files from the gh-pages branch
+    // Task 2: Prime the git index with files from the given branch
     await git.checkoutBranch(name, paths: [outputDirectory.path]);
     logStatus('Checked out files from $name into ${outputDirectory.path}.');
     // Task 3: Generate docs into [outputDirectory]
