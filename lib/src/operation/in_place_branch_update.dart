@@ -121,8 +121,8 @@ When you're done, run one of the following to return your original branch:
     // Task 1: Pull version number
     final versionString = await defineVersion();
     // Task 2: Prime the git index with files from the gh-pages branch
-    await git.checkoutBranch('gh-pages', paths: [outputDirectory.path]);
-    logStatus('Checked out files from gh-pages into ${outputDirectory.path}.');
+    await git.checkoutBranch(branchName, paths: [outputDirectory.path]);
+    logStatus('Checked out files from $branchName into ${outputDirectory.path}.');
     // Task 3: Generate docs into [outputDirectory]
     final generateFuture = generate(outputDirectory, arguments);
     logStatus('Started generating documentation...');
