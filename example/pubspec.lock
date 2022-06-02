@@ -86,13 +86,11 @@ packages:
     source: hosted
     version: "1.15.0"
   convert:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "."
-      ref: fix-47
-      resolved-ref: "61b0d8f4635c1b0375ae3e0d14f88a02aa5e7f69"
-      url: "https://github.com/dart-lang/convert.git"
-    source: git
+      name: convert
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "3.0.2"
   coverage:
     dependency: transitive
