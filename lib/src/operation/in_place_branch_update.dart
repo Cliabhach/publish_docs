@@ -116,13 +116,12 @@ When you're done, run one of the following to return your original branch:
   /// Make sure [outputDirectory] points to the directory where only generated
   /// documentation files are located - the [generate] call is allowed to
   /// overwrite anything in there.
-  Future<String> generateDocsPatch(String branchName,
-      List<String> arguments) async {
+  Future<String> generateDocsPatch(String name, List<String> arguments) async {
     // Task 1: Pull version number
     final versionString = await defineVersion();
     // Task 2: Prime the git index with files from the gh-pages branch
-    await git.checkoutBranch(branchName, paths: [outputDirectory.path]);
-    logStatus('Checked out files from $branchName into ${outputDirectory.path}.');
+    await git.checkoutBranch(name, paths: [outputDirectory.path]);
+    logStatus('Checked out files from $name into ${outputDirectory.path}.');
     // Task 3: Generate docs into [outputDirectory]
     final generateFuture = generate(outputDirectory, arguments);
     logStatus('Started generating documentation...');

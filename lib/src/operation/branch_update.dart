@@ -33,6 +33,7 @@ abstract class BranchUpdate {
   /// This way methods like [run] and [showOnCompleted] can provide realtime
   /// updates on what they are doing.
   void logStatus(String message) {
+    // ignore: avoid_print
     print('$logTag: $message');
   }
 
