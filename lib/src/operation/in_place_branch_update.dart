@@ -116,8 +116,8 @@ When you're done, run one of the following to return your original branch:
   /// Create a patch-file with updates to published documentation.
   ///
   /// Make sure [outputDirectory] points to the directory where only generated
-  /// documentation files are located - the [generateAndWaitForDocs] call is
-  /// allowed to overwrite anything in there.
+  /// documentation files are located - the [generate] call is allowed to
+  /// overwrite anything in there.
   Future<String> generateDocsPatch(GitCommands git, Directory outputDirectory,
       List<String> arguments) async {
     // Task 1: Pull version number

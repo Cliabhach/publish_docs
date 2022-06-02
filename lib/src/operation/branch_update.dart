@@ -30,8 +30,8 @@ abstract class BranchUpdate {
 
   /// Add a message to the log.
   ///
-  /// This way methods like [generateDocsPatch] and [patchOutOfGitDiff] can
-  /// provide realtime updates on what they are doing.
+  /// This way methods like [run] and [showOnCompleted] can provide realtime
+  /// updates on what they are doing.
   void logStatus(String message) {
     print('$logTag: $message');
   }
