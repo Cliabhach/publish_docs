@@ -57,7 +57,7 @@ abstract class BranchUpdate {
   ///
   /// With a little web frontend, that could be pretty....
   Future<void> showOnCompleted(Directory output) {
-    final indexDocFile = Directory(absolutePath(output.path, 'index.html'));
+    final indexDocFile = File(absolutePath(output.path, 'index.html'));
     logStatus(
       '''
 The gh-pages branch has been updated. Please review the files in docs/api/ to
