@@ -16,19 +16,24 @@ abstract class BranchUpdate {
   ///
   /// The [git] given here defines the source directory, and we may use the
   /// [GitCommands.path] property to access that.
-  BranchUpdate(this.git);
+  BranchUpdate(this.git, {this.logTag = 'Update'});
 
   /// Project-specific git context.
   ///
   /// We use this to execute git commands
   final GitCommands git;
 
+  /// A distinctive prefix for use in log messages.
+  ///
+  /// See also [logStatus].
+  final String logTag;
+
   /// Add a message to the log.
   ///
   /// This way methods like [generateDocsPatch] and [patchOutOfGitDiff] can
   /// provide realtime updates on what they are doing.
   void logStatus(String message) {
-    print('GH Pages: $message');
+    print('$logTag: $message');
   }
 
   /// Figure out what version string best reflects this project.

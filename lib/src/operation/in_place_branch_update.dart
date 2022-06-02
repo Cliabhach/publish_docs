@@ -47,7 +47,7 @@ import 'package:publish_docs/src/util/git_util.dart';
 /// _in_ `docs/api/`, then they'll be erased during the 'checkout' step.
 class InPlaceBranchUpdate extends BranchUpdate {
   /// A new [BranchUpdate] that doesn't use a temporary directory.
-  InPlaceBranchUpdate(GitCommands git) : super(git);
+  InPlaceBranchUpdate(GitCommands git) : super(git, logTag: 'GH Pages');
 
   /// Absolute path to the patch created by [patchOutOfGitDiff].
   ///
