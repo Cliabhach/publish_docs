@@ -12,15 +12,10 @@ class MockGitCommands extends Mock implements GitCommands {
 /// Custom version of [BranchUpdate] designed for use only in tests.
 ///
 /// Instead of printing to the console, calls to [logStatus] will add
-/// entries to the new [messages] property.
+/// entries to the constructor's `messages` property.
 class SimpleBranchUpdate extends BranchUpdate {
-  SimpleBranchUpdate(super.git, this.messages);
-
-  final List<String> messages;
-
-  void logStatus(String message) {
-    messages.add('$logTag: $message');
-  }
+  SimpleBranchUpdate(super.git, List<String> messages):
+        super(logger: messages.add);
 
   @override
   Future<void> run(String branchName, List<String> arguments) {
@@ -37,9 +32,7 @@ void main() {
       git = MockGitCommands();
       logMessages = [];
     });
-    // Ideally we could use the superclass implementation of logStatus? And then
-    // this would be a test of how that prepends the logTag.
-    test('basic check of SimpleBranchUpdate', () async {
+    test('basic check of logStatus', () async {
       // Given
       final update = SimpleBranchUpdate(git, logMessages);
       const target = 'some-branch';
