@@ -16,7 +16,10 @@ abstract class BranchUpdate {
   ///
   /// The [git] given here defines the source directory, and we may use the
   /// [GitCommands.path] property to access that.
-  BranchUpdate(this.git, {this.logTag = 'Update'});
+  BranchUpdate(this.git, {
+    this.logTag = 'Update',
+    void Function(String message) logger = print
+  }) : _logger = logger;
 
   /// Project-specific git context.
   ///
@@ -28,13 +31,17 @@ abstract class BranchUpdate {
   /// See also [logStatus].
   final String logTag;
 
+  /// The [_logger] property is here primarily for testing. By default we print
+  /// [logStatus] messages to the console, but we will pass them to the function
+  /// given here if desired.
+  final Function(String message) _logger;
+
   /// Add a message to the log.
   ///
   /// This way methods like [run] and [showOnCompleted] can provide realtime
   /// updates on what they are doing.
   void logStatus(String message) {
-    // ignore: avoid_print
-    print('$logTag: $message');
+    _logger('$logTag: $message');
   }
 
   /// Figure out what version string best reflects this project.
