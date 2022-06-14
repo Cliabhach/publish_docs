@@ -69,5 +69,23 @@ void main() {
       expect(logMessages.first, stringContainsInOrder(['Update:', '(', ')']));
       expect(versionString, '1.2.3+test1');
     });
+    test('generate uses given output dir', skip: 'see inline TODO', () async {
+      // Given
+      final update = SimpleBranchUpdate(git, logMessages);
+      // (use dartdoc_options that we've prepared for this test)
+      final testProjectPath = path.absolute(testResourcePath, 'test2');
+      // (this output directory will not actually be used if the test passes)
+      final outputDir = await makeTempDir('branch_update.test2');
+      // TODO(Cliabhach): make source, assets directories configurable
+      final arguments = ['--generate-docs'];
+
+      // When
+      final generated = await update.generate(outputDir, arguments);
+
+      // Then
+      expect(logMessages, isEmpty);
+      expect(generated.output, outputDir.path);
+      expect(outputDir.listSync(), isEmpty);
+    });
   });
 }

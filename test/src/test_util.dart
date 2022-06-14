@@ -31,6 +31,8 @@ Directory append(
 /// The default logic in [PhysicalResourceProvider] is incredibly basic.
 ///
 /// This method lets you write tests that make sense.
+///
+/// See also [makeTempDir] for creating temporary directories.
 String resourcePath(String testName) {
   final context = PhysicalResourceProvider.INSTANCE.pathContext;
 
@@ -50,6 +52,13 @@ String resourcePath(String testName) {
 /// Wrapper around [ResourceProvider.getResource] and [path.absolute].
 Resource relative(ResourceProvider provider, String parent, String child) {
   return provider.getResource(path.absolute(parent, child));
+}
+
+/// Create a temporary directory for a test.
+///
+/// To read in test resources, use [resourcePath].
+Future<Directory> makeTempDir(String testName) {
+  return Directory.systemTemp.createTemp('publish_docs.test.$testName');
 }
 
 /// Variant of [futureAnswer] that returns a void-typed Future.
