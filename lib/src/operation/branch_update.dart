@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:dartdoc/dartdoc.dart';
 import 'package:publish_docs/src/git/commands.dart';
 import 'package:publish_docs/src/operation/docs_bridge.dart';
 import 'package:publish_docs/src/util/doc_util.dart';
@@ -56,7 +57,8 @@ abstract class BranchUpdate {
   /// Generate the docs!
   ///
   /// Documentation will be placed in the given directory.
-  Future<void> generate(Directory outputDirectory, List<String> arguments) {
+  Future<DartdocOptionContext> generate(Directory outputDirectory,
+      List<String> arguments) {
     final modified = changeOutputDir(arguments, outputDirectory);
     return generateAndWaitForDocs(modified);
   }
