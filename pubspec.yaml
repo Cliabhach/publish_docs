@@ -5,7 +5,7 @@ version: 0.5.2+29
 publish_to: none
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.18.0 <3.0.0"
 
 executables:
   # General-purpose 'info' script
@@ -18,14 +18,14 @@ executables:
 dependencies:
   # The official dart-code analysis library. We depend on some unstable parts of its API in
   # order to overlay assets and/or resources correctly.
-  analyzer: ^4.3.1
+  analyzer: ^5.4.0
   # Encoders and decoders for string-like objects (including regular strings). We use a
   # feature added in 3.0.x to temporarily store PNGs in memory as if they were strings.
   convert: '>=3.0.2 <3.2.0'
   # The official documentation library for dart code. When changing this version, also look
   # at assets_layers.dart - the directories we give there _must_ be compatible. Copy over
   # files from `dartdoc` itself (and update the LICENSE) if appropriate.
-  dartdoc: 6.0.1
+  dartdoc: 6.1.5
   # A wrapper around the git Source Control Management system. Essential to the 'commit'
   # aspect of this library, and an all-around helpful library in general.
   git: 2.0.0
@@ -37,6 +37,6 @@ dependencies:
 dev_dependencies:
   coverage: ^1.2.0
   mocktail: ^0.3.0
-  test: ^1.21.1
+  test: ^1.22.1
   very_good_analysis: ^2.4.0
 
