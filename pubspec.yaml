@@ -18,7 +18,7 @@ executables:
 dependencies:
   # The official dart-code analysis library. We depend on some unstable parts of its API in
   # order to overlay assets and/or resources correctly.
-  analyzer: ^5.4.0
+  analyzer: ^5.2.0
   # Encoders and decoders for string-like objects (including regular strings). We use a
   # feature added in 3.0.x to temporarily store PNGs in memory as if they were strings.
   convert: '>=3.0.2 <3.2.0'
