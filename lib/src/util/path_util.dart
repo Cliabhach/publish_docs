@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:analyzer/file_system/file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
+import 'package:publish_docs/src/util/yaml_util.dart';
 
 /// Find an options file on disk, if possible.
 ///
@@ -36,7 +37,15 @@ File absoluteOptionsFilePath({String optionsFileDir = '/'}) {
 ///
 /// See also [absolutePath].
 String assetsPath() {
-  return absolutePath('doc', 'assets');
+  final context = PhysicalResourceProvider.INSTANCE.pathContext;
+  final publishDocsOptions = YamlUtil.publishDocsOptions();
+
+  if (publishDocsOptions.isNotEmpty) {
+    final found = publishDocsOptions['custom_assets'].toString();
+    return context.normalize(context.absolute(found));
+  } else {
+    return context.absolute('doc', 'assets');
+  }
 }
 
 /// Retrieve the absolute, root-anchored, filesystem path to a file/directory.

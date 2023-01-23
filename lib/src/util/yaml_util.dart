@@ -13,6 +13,9 @@ class YamlUtil {
   static YamlMap _foundOptions = YamlMap();
 
   /// Parse and load the options for `publish_docs`.
+  ///
+  /// Callers should use the `path_util` function called
+  /// `absoluteOptionsFilePath` to find the optionsFile.
   static void prefetchPublishDocsOptions(File optionsFile) {
     final utility = YamlUtil();
 
