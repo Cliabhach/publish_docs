@@ -2,7 +2,28 @@
 
 import 'dart:io';
 
+import 'package:analyzer/file_system/file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
+
+/// Find an options file on disk, if possible.
+///
+/// We only care about the options for this library.
+File absoluteOptionsFilePath({String optionsFileDir = '/'}) {
+  final provider = PhysicalResourceProvider.INSTANCE;
+  const name = 'publish_docs_options.yaml';
+
+  final String optionsFilePath;
+  if (optionsFileDir == '/') {
+    optionsFilePath = provider.pathContext.absolute(name);
+  } else {
+    optionsFilePath = provider.pathContext.absolute(optionsFileDir, name);
+  }
+
+  // Do we want this for diagnostic reasons?
+  //print("Found file $optionsFilePath");
+
+  return provider.getFile(optionsFilePath);
+}
 
 /// Return the absolute path to the current project's 'assets' directory.
 ///
