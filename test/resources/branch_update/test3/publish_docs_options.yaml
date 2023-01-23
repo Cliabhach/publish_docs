@@ -1,0 +1,3 @@
+publish:
+  custom_assets: test/resources/branch_update/test3/doc3/assets1/
+  dartdoc_compatibility: 5.1.2

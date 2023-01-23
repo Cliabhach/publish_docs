@@ -4,6 +4,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as path;
 import 'package:publish_docs/src/git/commands.dart';
 import 'package:publish_docs/src/operation/branch_update.dart';
+import 'package:publish_docs/src/util/path_util.dart';
+import 'package:publish_docs/src/util/yaml_util.dart';
 import 'package:test/test.dart';
 
 import 'test_util.dart';
@@ -74,18 +76,42 @@ void main() {
       final update = SimpleBranchUpdate(git, logMessages);
       // (use dartdoc_options that we've prepared for this test)
       final testProjectPath = path.absolute(testResourcePath, 'test2');
+      when(() => git.path).thenReturn(testProjectPath);
+      // (prefetch the options..)
+      YamlUtil.prefetchPublishDocsOptions(
+          absoluteOptionsFilePath(optionsFileDir: testProjectPath)
+      );
       // (this output directory will not actually be used if the test passes)
       final outputDir = await makeTempDir('branch_update.test2');
-      // TODO(Cliabhach): make source, assets directories configurable
       final arguments = ['--generate-docs'];
 
       // When
+      // TODO(Cliabhach): avoid actually generating docs for this project
       final generated = await update.generate(outputDir, arguments);
 
       // Then
       expect(logMessages, isEmpty);
       expect(generated.output, outputDir.path);
       expect(outputDir.listSync(), isEmpty);
+    });
+    test('assets path can be set', () async {
+      // Given
+      // (use dartdoc_options that we've prepared for this test)
+      final testProjectPath = path.absolute(testResourcePath, 'test3');
+
+      // When
+      final first = assetsPath();
+      // (prefetch the options..)
+      YamlUtil.prefetchPublishDocsOptions(
+          absoluteOptionsFilePath(optionsFileDir: testProjectPath)
+      );
+      // (..load the path)
+      final found = assetsPath();
+
+      // Then
+      // (Substring match is good enough, ending '/' should have been removed)
+      expect(first, endsWith('doc/assets'));
+      expect(found, endsWith('doc3/assets1'));
     });
   });
 }
