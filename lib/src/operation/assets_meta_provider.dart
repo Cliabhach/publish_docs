@@ -23,7 +23,8 @@ import 'package:publish_docs/src/util/path_util.dart';
 /// `lib/resources/` directory.
 Future<PackageMetaProvider> obtainPackageMetaProvider() async {
 
-  final assetsAbsolutePath = absolutePath('doc', 'assets');
+  // TODO(Cliabhach): Pass in, or read from config file
+  final assetsAbsolutePath = assetsPath();
 
   final provider = await obtainAssetsProvider(
       pathForLayers: assetsAbsolutePath,

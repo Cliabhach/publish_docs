@@ -85,7 +85,7 @@ Future<Dartdoc?> getDartdocWithAssets(
 ///
 /// Use the returned list for a call to [parseOptions].
 List<String> addAssets(List<String> arguments,) {
-  final assetsAbsolutePath = absolutePath('doc', 'assets');
+  final assetsAbsolutePath = assetsPath();
   final modifiedArguments = arguments + ['--resources-dir', assetsAbsolutePath];
   return modifiedArguments;
 }

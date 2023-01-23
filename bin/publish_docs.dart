@@ -6,7 +6,7 @@ import 'package:publish_docs/publish_docs.dart';
 ///
 /// This is what command-line callers like `dart pub run publish_docs` call.
 Future<void> main(List<String> arguments) async {
-  final assetsAbsolutePath = absolutePath('doc', 'assets');
+  final assetsAbsolutePath = assetsPath();
 
   checkForAssetsDirectory(assetsAbsolutePath);
 

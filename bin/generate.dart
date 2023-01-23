@@ -11,7 +11,7 @@ import 'package:publish_docs/src/private/assets_resource_provider.dart';
 /// Further details: [generateDocs], [getDartdocWithAssets],
 /// [obtainAssetsProvider].
 Future<void> main(List<String> arguments) async {
-  final assetsAbsolutePath = absolutePath('doc', 'assets');
+  final assetsAbsolutePath = assetsPath();
 
   checkForAssetsDirectory(assetsAbsolutePath);
 
